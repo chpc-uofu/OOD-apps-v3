@@ -1,0 +1,223 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: <%= namespace %>
+  name: <%= id %>
+  labels:
+    job: <%= id %>
+    app.kubernetes.io/name: <%= container.name %>
+    app.kubernetes.io/managed-by: open-ondemand
+    <%- if !script.accounting_id.nil? && script.accounting_id != "" -%>
+    account: <%= script.accounting_id %>
+    <%- end -%>
+    <%- spec.container.labels.each_pair do |key, value| -%>
+    <%= key %>: "<%= value %>"
+    <%- end -%>
+  annotations:
+    <%- unless script.wall_time.nil? -%>
+    pod.kubernetes.io/lifetime: <%= helper.seconds_to_duration(script.wall_time) %>
+    <%- end -%>
+spec:
+  restartPolicy: <%= spec.container.restart_policy %>
+  securityContext:
+    runAsUser: <%= run_as_user %>
+    runAsGroup: <%= run_as_group %>
+    runAsNonRoot: true
+    supplementalGroups: <%= spec.container.supplemental_groups %>
+    fsGroup: <%= fs_group %>
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  <%- unless spec.container.image_pull_secret.nil? -%>
+  imagePullSecrets:
+  - name: <%= spec.container.image_pull_secret %>
+  <%- end -%>
+  containers:
+  - name: "<%= spec.container.name %>"
+    image: <%= spec.container.image %>
+    imagePullPolicy: <%= spec.container.image_pull_policy %>
+    <%- unless spec.container.working_dir.empty? -%>
+    workingDir: "<%= spec.container.working_dir %>"
+    <%- end -%>
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    <%- unless spec.container.port.nil? -%>
+    - name: POD_PORT
+      value: "<%= spec.container.port %>"
+    <%- end -%>
+    <%- spec.container.env.each_pair do |name, value| -%>
+    - name: <%= name %>
+      value: "<%= value %>"
+    <%- end # for each env -%>
+    <%- unless spec.container.command.empty? -%>
+    command:
+    <%- spec.container.command.each do |cmd| -%>
+    - "<%= cmd %>"
+    <%- end # for each command -%>
+    <%- end # unless command is nil -%>
+    <%- unless spec.container.port.nil? -%>
+    ports:
+    - containerPort: <%= spec.container.port %>
+    startupProbe:
+      tcpSocket:
+        port: <%= spec.container.startup_probe.port %>
+      initialDelaySeconds: <%= spec.container.startup_probe.initial_delay_seconds %>
+      failureThreshold: <%= spec.container.startup_probe.failure_threshold %>
+      periodSeconds: <%= spec.container.startup_probe.period_seconds %>
+    <%- end -%>
+    <%- if !all_mounts.empty? || (!configmap.nil? && configmap.mounts?) -%>
+    volumeMounts:
+    <%- unless configmap.nil? -%>
+    <%- configmap.files.each do |file| -%>
+      <%- next if file.mount_path.nil? -%>
+    - name: configmap-volume
+      mountPath: <%= file.mount_path %>
+      <%- unless file.sub_path.nil? -%>
+      subPath: <%= file.sub_path %>
+      <%- end # end unless file.sub_path.nil? -%>
+    <%- end # end configmap.files.each -%>
+    <%- end # unless configmap.nil? -%>
+    <%- all_mounts.each do |mount| -%>
+    - name: <%= mount[:name] %>
+      mountPath: <%= mount[:destination_path] %>
+    <%- end # for each mount -%>
+    <%- end # configmap mounts? and all_mounts not empty -%>
+    resources:
+      limits:
+        memory: "<%= spec.container.memory_limit %>"
+        cpu: "<%= spec.container.cpu_limit %>"
+        <%- unless script.gpus_per_node.nil? -%>
+        <%= gpu_type %>: <%= script.gpus_per_node %>
+        <%- end -%>
+      requests:
+        memory: "<%= spec.container.memory_request %>"
+        cpu: "<%= spec.container.cpu_request %>"
+        <%- unless script.gpus_per_node.nil? -%>
+        <%= gpu_type %>: <%= script.gpus_per_node %>
+        <%- end -%>
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - all
+      privileged: false
+  <%- unless spec.init_containers.empty? -%>
+  initContainers:
+  <%- spec.init_containers.each do |ctr| -%>
+  - name: "<%= ctr.name %>"
+    image: "<%= ctr.image %>"
+    imagePullPolicy: <%= ctr.image_pull_policy %>
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    <%- ctr.env.each_pair do |name, value| -%>
+    - name: <%= name %>
+      value: "<%= value %>"
+    <%- end # for each env -%>
+    command:
+    <%- ctr.command.each do |cmd| -%>
+    - "<%= cmd %>"
+    <%- end # command loop -%>
+    <%- if !all_mounts.empty? || (!configmap.nil? && configmap.init_mounts?) -%>
+    volumeMounts:
+    <%- unless configmap.nil? -%>
+    <%- configmap.files.each do |file| -%>
+    <%- next if file.init_mount_path.nil? -%>
+    - name: configmap-volume
+      mountPath: <%= file.init_mount_path %>
+      <%- unless file.init_sub_path.nil? -%>
+      subPath: <%= file.init_sub_path %>
+      <%- end # end unless file.sub_path.nil? -%>
+    <%- end # end configmap.files.each -%>
+    <%- end # unless configmap.nil? -%>
+    <%- all_mounts.each do |mount| -%>
+    - name: <%= mount[:name] %>
+      mountPath: <%= mount[:destination_path] %>
+    <%- end # for each mount -%>
+    <%- end # if config_map init mounts and all_mounts not empty -%>
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - all
+      privileged: false
+  <%- end # init container loop -%>
+  <%- end # if init containers -%>
+  <%- unless (configmap.to_s.empty? && all_mounts.empty?) -%>
+  volumes:
+  <%- unless configmap.to_s.empty? -%>
+  - name: configmap-volume
+    configMap:
+      name: <%= configmap_name(id) %>
+  <%- end -%>
+  <%- all_mounts.each do |mount| -%>
+  <%- if mount[:type] == 'nfs' -%>
+  - name: <%= mount[:name] %>
+    nfs:
+      server: <%= mount[:host] %>
+      path: <%= mount[:path] %>
+  <%- elsif mount[:type] == 'host' -%>
+  - name: <%= mount[:name] %>
+    hostPath:
+      path: <%= mount[:path] %>
+      type: <%= mount[:host_type] %>
+  <%- end # if mount is [host,nfs] -%>
+  <%- end # for each mount -%>
+  <%- end # (configmap.to_s.empty? || all_mounts.empty?) -%>
+  <%- unless node_selector.empty? -%>
+  nodeSelector:
+  <%- node_selector.each_pair do |key, value| -%>
+    <%= key %>: "<%= value %>"
+  <%- end # node_selector.each_pair -%>
+  <%- end #unless node_selector.empty? -%>
+---
+<%- unless spec.container.port.nil? -%>
+apiVersion: v1
+kind: Service
+metadata:
+  name: <%= service_name(id) %>
+  namespace: <%= namespace %>
+  labels:
+    job: <%= id %>
+    app.kubernetes.io/name: <%= container.name %>
+    app.kubernetes.io/managed-by: open-ondemand
+spec:
+  selector:
+    job: <%= id %>
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: <%= spec.container.port %>
+  type: NodePort
+<%- end # end for service -%>
+<%- unless configmap.nil? -%>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: <%= configmap_name(id) %>
+  namespace: <%= namespace %>
+  labels:
+    job: <%= id %>
+    app.kubernetes.io/name: <%= container.name %>
+    app.kubernetes.io/managed-by: open-ondemand
+data:
+<%- configmap.files.each do |file| -%>
+  <%- next if file.data.nil? || file.filename.nil? -%>
+  <%= file.filename %>: |
+    <% config_data_lines(file.data).each do |line| %><%= line %><% end %>
+<%- end # end for configmap files -%>
+<%- end # end configmap.nil? %>

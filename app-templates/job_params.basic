@@ -1,0 +1,22 @@
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: "Maximum number of CPU cores on notchpeak-shared-short is 16, see [cluster help pages](https://www.chpc.utah.edu/resources/HPC_Clusters.php) for other cluster's node counts."
+    min: 1
+    step: 1
+  bc_num_hours:
+    value: 1
+    min: 1
+    step: 1
+    help: "Maximum wall time on notchpeak-shared-short is 8 hours, general nodes 72 hours, owner nodes 14 days."
+  bc_vnc_resolution:
+    required: true
+  bc_account:
+    label: "Account"
+    value: "notchpeak-shared-short"
+  bc_queue:
+    label: "Partition"
+    value: "notchpeak-shared-short"
+  bc_email_on_started:
+    help: "If you do not receive the email, check your [Profile](https://www.chpc.utah.edu/role/user/edit_profile.php) for correct address."

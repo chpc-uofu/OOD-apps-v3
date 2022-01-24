@@ -1,0 +1,21 @@
+---
+name: RStudio Server
+category: Interactive Apps
+subcategory: Servers
+role: batch_connect
+description: |
+  This app will launch [RStudio Server] an IDE for [R] on one node of a [HPC cluster] or on a [Frisco node].
+ 
+  To start the job promptly, use notchpeak-shared-short account and partition on the [Notchpeak cluster].
+
+  [GPU specification] is optional for the partitions that have them.
+
+  <b>NOTE:</b> For technical reasons only CHPC builds of the RStudio Server currently work on Frisco nodes. Please contact us for more information at helpdesk@chpc.utah.edu.
+
+  [RStudio Server]: https://www.rstudio.com/products/rstudio-server/
+  [R]: https://www.r-project.org/
+  [Notchpeak cluster]: https://www.chpc.utah.edu/documentation/policies/2.1GeneralHPCClusterPolicies.php#Pol2.1.6
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

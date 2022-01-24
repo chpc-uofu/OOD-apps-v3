@@ -1,0 +1,10 @@
+**none** - No GPU
+**k80** - Tesla K80 GPU(s) (double precision)
+**1080ti** - GeForce 1080 Ti GPU(s) (single precision)
+**2080ti** - GeForce 2080 Ti GPU(s) (single precision)
+**titanv** - GeForce Titan V GPU(s) (single precision)
+**3090** - GeForce 3090 GPU(s) (single precision)
+**p40** - Tesla P40 GPU (single precision)
+**v100** - Tesla V100 GPU(s) (double precision)
+**a100** - Tesla A100 GPU(s) (double precision)
+**t4** - Tesla T4 GPU(s) (single precision)

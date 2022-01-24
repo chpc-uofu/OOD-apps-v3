@@ -1,0 +1,45 @@
+<%
+app_name = "Jupyter"
+template_root = "/var/www/ood/apps/templates/"
+%>
+---
+title: <%= app_name %>
+attributes:
+  interface:
+    widget: select
+    label: <%= app_name %> interface
+    help: "This defines the interface of <%= app_name %> you want to start (Notebook or Lab)."
+    options:
+      - [ "Notebook", "notebook" ]
+      - [ "Lab", "lab" ]
+  custom_environment:
+    widget: text_area
+    label: Environment Setup (drag text area to enlarge)
+    help: "Enter commands (module load, source activate, etc) to create your desired Jupyter environment; jupyter MUST be on your path and either notebook or jupyterlab installed in your Python environment. For instructions how to install your own Python using Miniconda see https://www.chpc.utah.edu/documentation/software/python-anaconda.php. If you don't have one yet use 'module load python/3.6.3 R/3.6.1'"
+    value: |
+        module load python/3.6.3 R/3.6.1
+
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"clusters") do |line| %>
+      - [ "<%= line.to_s.strip %>" ]
+      <% end %>    
+    help: |
+      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+
+<% IO.foreach(template_root+"job_params") do |line| %>
+<%= line %>
+<% end %>    
+
+form:
+  - interface
+  - custom_environment
+  - cluster
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - bc_queue
+  - memtask
+  - gpu_type
+  - bc_email_on_started

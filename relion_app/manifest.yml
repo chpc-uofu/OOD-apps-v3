@@ -1,0 +1,18 @@
+---
+name: RELION
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [RELION] GUI on a [HPC cluster] or on a [Frisco node]. You
+  will be able to interact with the RELION GUI through a VNC session.
+
+  If you want to run the RELION analysis in a batch mode, please choose only single task 
+  for this GUI launch. 
+
+  NOTE: The CPU version of RELION is currently optimized for Notchpeak Intel nodes and does not run on Kingspeak, Lonepeak or Notchpeak AMD nodes.
+
+  [RELION]: https://www3.mrc-lmb.cam.ac.uk/relion
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

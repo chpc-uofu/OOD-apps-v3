@@ -1,0 +1,81 @@
+<!-- node status progressbar -->
+<div><%= showqer.nodes_used %> of <%= showqer.available_nodes %> Nodes Active (<%= showqer.available_nodes - showqer.nodes_used %> Nodes Free) </div>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" style="width:<%= showqer.nodes_percent.round(2) %>%">
+    <%=(showqer.nodes_percent).round(2) %>%
+  </div>
+</div>
+<div><%= showqer.procs_used %> of <%= showqer.available_procs %> Processors Active (<%= showqer.available_procs - showqer.procs_used %> Processors Free)</div>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" style="width:<%= showqer.procs_percent.round(2) %>%">
+    <%= (showqer.procs_percent).round(2) %>%
+  </div>
+</div>
+<% if showqer.job_scheduler_name == "slurm" %>
+<div>
+  <span>
+    <%= (showqer.gpu_nodes - showqer.gpu_nodes_free) %> of <%= showqer.gpu_nodes %> GPU Nodes Active (<%= showqer.gpu_nodes_free %> Node(s) Free)
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar progress-bar-secondary" role="progressbar" style="width:<%= showqer.gpu_nodes_available_percent %>%">
+    <%= showqer.gpu_nodes_available_percent.round(2) %>%
+  </div>
+</div>
+<% else %>
+<div>
+  <span>
+    <%= gpustats.total_gpus - gpustats.full_nodes_available %> of <%= gpustats.total_gpus %> GPU Nodes Active (<%= gpustats.full_nodes_available %> Node(s) Free)
+  </span>
+</div>
+<div class="progress">
+  <div class="progress-bar progress-bar-secondary" role="progressbar" style="width:<%= gpustats.gpus_percent.round(2) %>%">
+    <%= (gpustats.gpus_percent).round(2) %>%
+  </div>
+</div>
+<% end %>
+<hr>
+<div>
+  <% if showqer.job_scheduler_name != "slurm" %>
+    <h4><%= showqer.available_jobs %> Running or Queued Jobs <br><small>(and <%= showqer.blocked_jobs %> blocked jobs)</small></h4>
+  <% else %>
+    <h4><%= showqer.available_jobs %> Running or Queued Jobs <br><br></h4>
+  <% end %>
+</div>
+<div class="row" style="background-color: #e0f2fa">
+  <div class="col-md-2 col-xs-12">
+    Running
+  </div>
+  <div class="col-md-10 col-xs-12">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 progress progress-custom">
+        <div class="progress-bar" role="progressbar" style="width:<%= showqer.active_percent %>%"></div>
+      </div>
+      <div class="col-md-6 col-xs-12" style="padding-left: 5px; text-align: left"><span><%= showqer.active_jobs %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2 col-xs-12">
+    Queued
+  </div>
+  <div class="col-md-10 col-xs-12">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 progress progress-custom">
+      <% if showqer.job_scheduler_name != "slurm" %>
+        <div class="progress-bar progress-bar-info" role="progressbar" style="width:<%= gpustats.percent_of_queued_jobs_not_requesting_gpus(showqer.available_jobs, showqer.eligible_jobs) %>%"></div>
+        <div class="progress-bar progress-bar-secondary" role="progressbar" style="width:<%= gpustats.percent_of_queued_jobs_requesting_gpus(showqer.available_jobs) %>%"></div>
+      <% else %>
+        <div class="progress-bar progress-bar-info" role="progressbar" style="width:<%= showqer.eligible_percent %>%"></div>
+      <% end %>
+      </div>
+      <% if showqer.job_scheduler_name != "slurm" %>
+        <div class="col-md-6 col-xs-12" style="padding-left: 5px; text-align: left"><span><%= showqer.eligible_jobs %><span class="text-secondary" style="padding-left: 5px;">(<%= gpustats.queued_jobs_requesting_gpus %> requesting GPU)</span></span></div>
+      <% else %>
+        <div class="col-md-6 col-xs-12" style="padding-left: 5px; text-align: left"><span><%= showqer.eligible_jobs %><span class="text-secondary" style="padding-left: 5px;">(<%= showqer.gpu_jobs_pending %> requesting GPU)</span></span></div>
+      <% end %>
+    </div>
+  </div>
+</div>

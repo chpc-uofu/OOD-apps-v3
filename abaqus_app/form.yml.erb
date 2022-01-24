@@ -1,0 +1,52 @@
+<%
+app_name = "Abaqus"
+mod_name = "abaqus"
+template_root = "/var/www/ood/apps/templates/"
+#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
+#modules = %x[ #{modulecmd}]
+modules = File.read(template_root+mod_name+".txt")
+%>
+---
+title: <%= app_name %>
+attributes:
+  version:
+    widget: select
+    label: <%= app_name %> version
+    help: "This defines the version of <%= app_name %> you want to load."
+    options:
+      <% modules.lines.reverse.each do |line| %>
+      <% unless line.to_s.strip == "" %>
+      - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
+      <% end %>    
+      <% end %>    
+  license_type:
+    label: "License type"
+    widget: "check_box"
+    value: "0"
+    help: |
+      Check to use the College of Engineering teaching license
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"clusters") do |line| %>
+      - [ "<%= line.to_s.strip %>" ]
+      <% end %>    
+    help: |
+      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+
+<% IO.foreach(template_root+"job_params") do |line| %>
+<%= line %>
+<% end %>    
+
+form:
+  - version
+  - license_type
+  - cluster
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - bc_queue
+  - memtask
+  - gpu_type
+  - bc_vnc_resolution
+  - bc_email_on_started

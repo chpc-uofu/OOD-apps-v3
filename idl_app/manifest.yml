@@ -1,0 +1,15 @@
+---
+name: IDL
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch an [IDL] IDE on a [HPC cluster] or on a [Frisco node]. You will be able
+  to interact with the IDL through a VNC session.
+
+  [GPU specification] is optional for the partitions that have them.
+
+  [IDL]: https://www.l3harrisgeospatial.com/Software-Technology/IDL
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview

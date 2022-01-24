@@ -1,0 +1,34 @@
+<%
+app_name = "R Shiny app"
+template_root = "/var/www/ood/apps/templates/"
+%>
+---
+title: <%= app_name %>
+attributes:
+  shiny_app:
+    widget: text_area
+    label: "Shiny app to run"
+    help: "Enter the path to the Shiny app you want to run. App file in this directory has to be named either app.R or server.R."
+    value: |
+        ~/R/shiny/app
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"clusters") do |line| %>
+      - [ "<%= line.to_s.strip %>" ]
+      <% end %>    
+    help: |
+      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+
+<% IO.foreach(template_root+"job_params") do |line| %>
+<%= line %>
+<% end %>    
+
+form:
+  - shiny_app
+  - cluster
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - bc_queue
+  - bc_email_on_started

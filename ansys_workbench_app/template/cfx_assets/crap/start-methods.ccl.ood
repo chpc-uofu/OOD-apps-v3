@@ -1,0 +1,37 @@
+#
+# start-methods.ccl
+#
+# This file contains the system start method definitions for CFX-5
+# parallel.
+#
+# Local changes to this file may be made by copying it into
+#   <CFX5ROOT>/config/start-methods.ccl
+# for system-wide changes, or for per-user modifications,
+#   <HOME>/.cfx/<CFX5VERSION>/start-methods.ccl
+# or
+#   C:\WINNT\PROFILES\<USER>\Application Data\CFX-5\<CFX5VERSION>\start-methods.ccl
+# for Windows systems.
+#
+# $Id: start-methods.ccl 130089 2013-09-11 14:34:12Z cjstaple $
+#
+SIMULATION CONTROL:
+  EXECUTION CONTROL:
+    START METHOD LIBRARY:
+      START METHOD: CHPC Intel MPI Distributed Parallel
+              Option = Direct
+              Start Command = "%{impidir}/bin/mpirun" -genv I_MPI_PLATFORM auto -r "%{env:I_MPI_MPD_RSH}" -configfile "%{req:appfile}"
+              Appfile Host Entry = -n %{hostprocs} -host %{hostname} %{executable} %{arguments}
+              Execution Path = %{impidir}/bin
+              Executable Suffix = -mpi
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Selectable Master Host = No
+              Homogeneous Parallel Only = Yes
+              Use Host List = Yes
+              Menu Position = 0.2
+              Minimum Partition Count = 1
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64
+      END
+    END
+  END
+END

@@ -1,0 +1,14 @@
+---
+name: COMSOL Multiphysics
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [COMSOL Multiphysics] GUI on a [HPC cluster] or on a [Frisco node]. You
+  will be able to interact with the COMSOL GUI through a VNC session.
+  Please, note a limited nature of this license provided by the College of Engineering. For more information, contact us at helpdesk@chpc.utah.edu.
+
+  [COMSOL Multiphysics]: https://www.comsol.com
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

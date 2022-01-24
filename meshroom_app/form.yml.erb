@@ -1,0 +1,29 @@
+<%
+app_name = "Meshroom"
+mod_name = "meshroom"
+template_root = "/var/www/ood/apps/templates/"
+#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
+#modules = %x[ #{modulecmd}]
+modules = File.read(template_root+mod_name+".txt")
+%>
+---
+title: <%= app_name %>
+attributes:
+  version:
+    widget: select
+    label: <%= app_name %> version
+    help: "This defines the version of <%= app_name %> you want to load."
+    options:
+      - [ "2021.1.0", "meshroom/2021.1.0" ]
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"interactives") do |line| %>
+      - [ "<%= line.to_s.strip %>" ]
+      <% end %>    
+    help: |
+      Select the Frisco node to create this session on.<br>
+
+form:
+  - version
+  - cluster

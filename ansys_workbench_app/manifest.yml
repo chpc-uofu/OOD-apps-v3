@@ -1,0 +1,14 @@
+---
+name: ANSYS Workbench
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch an [ANSYS Workbench] within a [Turbo VNC] server on a
+  [HPC cluster] or on a [Frisco node].
+
+  [ANSYS Workbench]: https://www.ansys.com/
+  [Turbo VNC]: https://www.turbovnc.org/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

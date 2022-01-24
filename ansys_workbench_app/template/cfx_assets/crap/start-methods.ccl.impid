@@ -1,0 +1,37 @@
+#
+# start-methods.ccl
+#
+# This file contains the system start method definitions for ANSYS CFX
+#
+# Local changes to this file may be made by copying it into
+#   <CFX_ROOT>/config/start-methods.ccl
+# for system-wide changes, or for per-user modifications,
+#   <HOME>/.cfx/<CFX_INTERNAL_REVISION>/start-methods.ccl
+# or
+#   <USERPROFILE>\.cfx\<CFX_INTERNAL_REVISION>\start-methods.ccl
+# for Windows systems.
+#
+# $Id$
+#
+SIMULATION CONTROL:
+  EXECUTION CONTROL:
+    START METHOD LIBRARY:
+      START METHOD: Intel MPI Distributed Parallel
+              Option = Direct
+              Start Command = "%{impidir}/bin/mpirun" -configfile "%{req:appfile}"
+              Appfile Header = -genv I_MPI_PLATFORM auto -r "%{env:I_MPI_MPD_RSH}" 
+              Appfile Host Entry = -n %{hostprocs} -host %{hostname} -wdir "%{workdir_host}" -env LD_PRELOAD %{impidir}/lib/libmpi_mt.so:%{impidir}/lib/libstrtok.so -env %{ldpathvar} %{rldpath} %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Start Command Prerequisites = mpd.hosts,impi.memlock
+              Execution Path = %{impidir}/bin
+              Executable Suffix = -mpi
+              Use Host List = Yes
+              Host Assignment = Block
+              Menu Position = 0.3
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64, winnt-amd64
+      END
+    END
+  END
+END

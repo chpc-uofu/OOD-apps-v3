@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Clean the environment
+module purge
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Launch Xfce Window Manager and Panel
+#
+
+(
+  module restore
+  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+  export XDG_CACHE_HOME="$(mktemp -d)"
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  xfce4-panel --sm-client-disable
+) &
+
+# Restore the module environment to avoid conflicts
+module restore
+
+#
+# Start Paraview
+#
+
+# Load the required environment
+module load paraview/5.3.0
+
+# Output debug info
+module list
+
+glxinfo |grep -i render
+
+# Launch ParaView
+set -x
+echo $DISPLAY
+#paraview #--mesa
+vglrun -c proxy paraview 
+#paraview -mesa
+#vglrun -c proxy paraview -mesa

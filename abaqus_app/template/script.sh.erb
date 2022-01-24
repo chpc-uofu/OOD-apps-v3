@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Clean the environment
+module purge
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Launch Xfce Window Manager and Panel
+#
+
+(
+  export SEND_256_COLORS_TO_REMOTE=1
+  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+  export XDG_CACHE_HOME="$(mktemp -d)"
+  module restore
+  set -x
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  xfce4-panel --sm-client-disable
+) &
+
+set -x
+# Set appropriate license based on license_type checkbox
+<%- if context.license_type == "1" -%>
+  echo Using CoE teaching license
+  if ! grep -q "winlic" $HOME/abaqus_v6.env;  then
+    echo code if not found
+    cat /uufs/chpc.utah.edu/sys/installdir/abaqus/abaqus_v6_coe_teaching.env >> $HOME/abaqus_v6.env
+  fi
+<%- else -%>
+  echo Using research license
+  if [ -f $HOME/abaqus_v6.env ]; then
+    if grep -q "winlic" $HOME/abaqus_v6.env;  then
+      echo code if found, remove
+      sed -i '/winlic/d' $HOME/abaqus_v6.env
+      sed -i '/TEACHING/d' $HOME/abaqus_v6.env
+    fi
+  fi
+<%- end -%>
+
+#
+# Start COMSOL Multiphysics
+#
+
+# Load the required environment
+module load intel <%= context.version %>
+
+# Launch COMSOL Multiphysics
+unset SLURM_GTIDS
+module list
+set -x
+abaqus cae -mesa \
+  |& tee "<%= session.staged_root.join("abaqus.log") %>"
+ABAQUS_EXIT_CODE=${PIPESTATUS[0]}
+{ set +x; } 2>/dev/null
+
+if [[ ${ABAQUS_EXIT_CODE} -ne 0 ]]; then
+cat | xmessage -file - -center <<- EOL
+ABAQUS/CAE died with the following output:
+$(cat "<%= session.staged_root.join("abaqus.log") %>")
+EOL
+fi

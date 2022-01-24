@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+#
+# Unfortunately `pbsrsh` uses Python and CFX will use its own Python
+# environment breaking `pbsrsh`, so I created a simple alternative
+#
+
+module purge
+
+echo "Arguments = ${@}" >> <%= session.staged_root.join("rsh.log") %>
+
+# Parse options up to the host argument
+while getopts ":ndl:x" opt; do
+  : # ignore all rsh options
+done
+shift $((OPTIND-1))
+
+# Get host argument
+HOST="${1}"; shift
+if [[ ${HOST} =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+  HOST="$(dig +short -x ${HOST})"
+fi
+HOST=${HOST%%.*}
+
+# Parse options up to command argument
+OPTIND=1
+while getopts ":ndl:x" opt; do
+  : # ignore all rsh options
+done
+shift $((OPTIND-1))
+
+echo "Submitted Arguments = ${HOST} ${*}" >> <%= session.staged_root.join("rsh.log") %>
+
+# CFX likes to wrap entire command + args as a single argument
+exec srun -w "${HOST}" --ntasks 1 --nodes 1 sh -c "${*}"

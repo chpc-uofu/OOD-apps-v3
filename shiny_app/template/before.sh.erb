@@ -1,0 +1,14 @@
+# Create cache directory on local disk
+export CACHE_DIR="$(mktemp -d)"
+
+# Clean the environment
+module purge
+
+# Export the module function if it exists
+[[ $(type -t module) == "function" ]] && export -f module
+
+# Find available port to run server on
+port=$(find_port ${host})
+
+# Generate password
+export password="$(create_passwd 32)"

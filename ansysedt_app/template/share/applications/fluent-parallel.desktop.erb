@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=bash -c 'zenity --info --no-wrap --title="Fluent Parallel" --text="$(<%= session.staged_root.join("bin", "fluent_info") %>)"'
+StartupNotify=true
+Terminal=false
+Categories=Utility;
+Name=Fluent Parallel Information
+Comment=Displays step-by-step instructions on how to setup a parallel Fluent solver

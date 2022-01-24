@@ -1,0 +1,14 @@
+---
+name: Code Server
+category: Interactive Apps
+subcategory: Servers
+role: batch_connect
+description: |
+  This app will launch a [VS Code] server using [Code Server] on a [HPC
+  cluster] or on a [Frisco node].
+
+  [VS Code]: https://code.visualstudio.com/
+  [Code Server]: https://coder.com/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

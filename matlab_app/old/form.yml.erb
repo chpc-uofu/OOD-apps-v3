@@ -1,0 +1,42 @@
+<%
+app_name = "MATLAB"
+template_root = "/var/www/ood/apps/templates/"
+%>
+---
+title: <%= app_name %>
+attributes:
+  version:
+    widget: select
+    label: <%= app_name %> version
+    help: "This defines the version of <%= app_name %> you want to load."
+    options:
+      - [ "R2019b", "matlab/R2019b" ]
+      - [ "R2019a", "matlab/R2019a" ]
+      - [ "R2018b", "matlab/R2018b" ]
+      - [ "R2018a", "matlab/R2018a" ]
+      - [ "R2017a", "matlab/R2017a" ]
+      - [ "R2016b", "matlab/R2016b" ]
+      - [ "R2015b", "matlab/R2015b" ]
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"clusters") do |line| %>
+      - [ "<%= line %>" ]
+      <% end %>    
+    help: |
+      Select the cluster or Frisco node to create this session on.
+<% IO.foreach(template_root+"job_params") do |line| %>
+<%= line %>
+<% end %>    
+
+form:
+  - version
+  - cluster
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - bc_queue
+  - memtask
+  - gpu_type
+  - bc_vnc_resolution  
+  - bc_email_on_started

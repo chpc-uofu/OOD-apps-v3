@@ -1,0 +1,14 @@
+---
+name: ANSYS Electronics Desktop
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch an [ANSYS Electronics Desktop] within a [Turbo VNC] server on a
+  [HPC cluster] or on a [Frisco node].
+
+  [ANSYS Electronics Desktop]: https://www.ansys.com/products/electronics/ansys-electronics-desktop
+  [Turbo VNC]: https://www.turbovnc.org/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

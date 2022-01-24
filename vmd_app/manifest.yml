@@ -1,0 +1,14 @@
+---
+name: VMD
+category: Interactive Apps
+subcategory: Visualization
+role: batch_connect
+description: |
+  This app will launch [VMD] on a [Frisco node]. You will be able to interact with the VMD GUI through a VNC session.
+
+  *Disclaimer:* This software is for **academic purpose** only. Please review
+  the [license agreement] before you use this software.
+
+  [VMD]: http://www.ks.uiuc.edu/Research/vmd/
+  [license agreement]: http://www.ks.uiuc.edu/Research/vmd/current/LICENSE.html
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php

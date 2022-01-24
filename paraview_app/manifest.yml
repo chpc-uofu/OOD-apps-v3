@@ -1,0 +1,12 @@
+---
+name: ParaView 
+category: Interactive Apps
+subcategory: Visualization
+role: batch_connect
+description: |
+  This app will launch a [ParaView] GUI on a [Frisco node].
+  You will be able to interact with the ParaView GUI through a VNC
+  session.
+
+  [Paraview]: https://www.paraview.org/
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php

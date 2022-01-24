@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+
+export app_path_source=<%= context.shiny_app.gsub /\r\n?/, "\n" %>
+
+<%-
+  # Helper
+  cache_root = Pathname.new("${CACHE_DIR}")
+
+  # Configure R
+  r_script = session.staged_root.join("launcher.R")
+  r_env    = "module load R/3.6.1"
+  r_cmd    = "R"
+
+  # Configure Shiny
+#  app_path = session.staged_root.join("${app_path_source}")
+  app_path = "${app_path_source}"
+  app_sock = cache_root.join("app.sock")
+
+  # Configure NGINX
+  nginx_conf  = session.staged_root.join("nginx.conf")
+  nginx_cache = cache_root.join("nginx")
+  nginx_env   = "module load singularity"
+  nginx_cmd   = <<-EOS.gsub(/^ {4}/, "")
+    singularity run \
+      -B "#{nginx_conf}:/usr/local/openresty/nginx/conf/nginx.conf" \
+      -B "#{nginx_cache}" \
+      -B "#{app_sock.dirname}" \
+      /uufs/chpc.utah.edu/sys/installdir/openresty/alpine_resty.simg
+  EOS
+-%>
+
+#
+# Create Shiny App launcher script
+#
+
+echo "Creating Shiny App launcher..."
+(
+umask 077
+sed 's/^ \{2\}//' > "<%= r_script %>" << EOT
+sock <- "<%= app_sock %>"
+  attr(sock, "mask") <- strtoi("0077", 8)
+  options(shiny.port = sock)
+  options(shiny.launch.browser = FALSE)
+  shiny::runApp("<%= app_path %>")
+EOT
+)
+
+#
+# Create NGINX configuration file
+#
+
+echo "Creating NGINX config..."
+(
+umask 077
+mkdir -p "<%= nginx_cache %>"
+sed 's/^ \{2\}//' > "<%= nginx_conf %>" << EOT
+  daemon off;
+  pid <%= nginx_cache %>/nginx.pid;
+  worker_processes 1;
+
+  events {
+    worker_connections 1024;
+  }
+
+  http {
+    client_body_temp_path <%= nginx_cache %>/client_body_temp;
+    proxy_temp_path       <%= nginx_cache %>/proxy_temp;
+    fastcgi_temp_path     <%= nginx_cache %>/fastcgi_temp;
+    uwsgi_temp_path       <%= nginx_cache %>/uwsgi_temp;
+    scgi_temp_path        <%= nginx_cache %>/scgi_temp;
+
+    map \$http_upgrade \$connection_upgrade {
+      default upgrade;
+      ''      close;
+    }
+
+    server {
+      listen ${port};
+
+      location /auth {
+        content_by_lua_block {
+          ngx.req.read_body()
+          local args, err = ngx.req.get_post_args()
+          if args and args.password == "${password}" then
+            local session = require "resty.session".start()
+            session.data.authenticated = true
+            session:save()
+          end
+          return ngx.redirect("/")
+        }
+      }
+
+      location / {
+        access_by_lua_block {
+          local session = require "resty.session".open()
+          if session.data.authenticated ~= true then
+            ngx.exit(ngx.HTTP_FORBIDDEN)
+          end
+        }
+        proxy_pass http://unix:<%= app_sock %>:/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection \$connection_upgrade;
+        proxy_read_timeout 7d;
+      }
+    }
+  }
+EOT
+)
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Start Shiny App server
+#
+
+(
+umask 077
+
+# Load the required environment
+<%= r_env %>
+
+# Output debug info
+module list
+
+# Launch Shiny App
+set -x
+<%= r_cmd %> --no-save --slave -f "<%= r_script %>"
+) &
+
+#
+# Wait until Unix socket is created
+#
+
+TIME=60
+FOUND=0
+echo "Waiting ${TIME} seconds until Unix socket is created..."
+for ((i=1; i<=TIME*2; i++)); do
+  if [[ -e "<%= app_sock %>" ]]; then
+    FOUND=1
+    echo "Found socket file!"
+    break
+  fi
+  sleep 0.5
+done
+[[ ${FOUND} -eq 0 ]] && echo "ERROR: Failed to find socket file!" && exit 1
+
+#
+# Start NGINX server
+#
+
+# Load required environment
+<%= nginx_env %>
+
+# Output debug info
+module list
+
+# Launch NGINX server
+set -x
+<%= nginx_cmd %>

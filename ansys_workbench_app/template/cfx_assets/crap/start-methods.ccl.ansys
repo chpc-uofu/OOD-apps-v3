@@ -1,0 +1,327 @@
+#
+# start-methods.ccl
+#
+# This file contains the system start method definitions for ANSYS CFX
+#
+# Local changes to this file may be made by copying it into
+#   <CFX_ROOT>/config/start-methods.ccl
+# for system-wide changes, or for per-user modifications,
+#   <HOME>/.cfx/<CFX_INTERNAL_REVISION>/start-methods.ccl
+# or
+#   <USERPROFILE>\.cfx\<CFX_INTERNAL_REVISION>\start-methods.ccl
+# for Windows systems.
+#
+# $Id$
+#
+SIMULATION CONTROL:
+  EXECUTION CONTROL:
+    START METHOD LIBRARY:
+      START METHOD: Serial
+              Option = Direct
+              Start Command = %{executable} %{arguments}
+              Executable Suffix = -mpi
+              Shared Disk Requirement = Master
+              Use Host List = No
+              Minimum Partition Count = 1
+              Maximum Partition Count = 1
+              Menu Position = 0.1
+      END
+
+      START METHOD: Intel MPI Local Parallel
+              Option = Direct
+!if($^O eq "MSWin32"){
+              Start Command = "%{impidir}\bin\mpiexec" -np %{partitions} -localonly -env CFX_SOLVER_OUTPUT_FILE "%{env:CFX_SOLVER_OUTPUT_FILE}"  %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}\intel;%{impidir}\bin
+!} else {
+              Start Command = "%{impidir}/bin/mpirun" -np %{partitions} -bootstrap fork -env LD_PRELOAD %{impidir}/lib/libstrtok.so %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Start Command Prerequisites = mpd.hosts
+              Execution Path = %{impidir}/bin
+!}
+              Executable Suffix = -mpi
+              Use Host List = No
+              Menu Position = 0.2
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64, winnt-amd64
+      END
+
+      START METHOD: Intel MPI Distributed Parallel
+              Option = Direct
+!if($^O eq "MSWin32"){
+              Start Command = "%{impidir}\bin\mpiexec" -configfile "%{req:appfile}"
+              Appfile Header = %{req:impi_windist}
+              Appfile Host Entry = -localroot -envexcl COMPUTERNAME -env CFX_SOLVER_OUTPUT_FILE "%{env:CFX_SOLVER_OUTPUT_FILE}" -env MULTIPORT_ROOT %{mportroot} -env CFX_7ZIP_PATH "%{env:CFX_7ZIP_PATH}" -env %{ldpathvar} %{rldpath} -n %{hostprocs} -host %{hostname} -wdir "%{workdir_host}" %{executable} %{arguments} 
+              Shared Library Path = %{mportlibdir}\intel;%{impidir}\bin
+!} else {
+              Start Command = "%{impidir}/bin/mpirun" -configfile "%{req:appfile}"
+              Appfile Header = -genv I_MPI_PLATFORM auto -r "%{env:I_MPI_MPD_RSH}" 
+              Appfile Host Entry = -n %{hostprocs} -host %{hostname} -wdir "%{workdir_host}" -env LD_PRELOAD %{impidir}/lib/libmpi_mt.so:%{impidir}/lib/libstrtok.so -env %{ldpathvar} %{rldpath} %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Start Command Prerequisites = mpd.hosts,impi.memlock
+              Execution Path = %{impidir}/bin
+!}
+              Executable Suffix = -mpi
+              Use Host List = Yes
+              Host Assignment = Block
+              Menu Position = 0.3
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64, winnt-amd64
+      END
+
+      START METHOD: Intel MPI Local Parallel Consistent Reduction
+              Option = Direct
+!if($^O eq "MSWin32"){
+              Start Command = "%{impidir}\bin\mpiexec" -np %{partitions} -localonly -env CFX_SOLVER_OUTPUT_FILE "%{env:CFX_SOLVER_OUTPUT_FILE}" -env I_MPI_ADJUST_REDUCE 2 -env I_MPI_ADJUST_ALLREDUCE 2 -env I_MPI_ADJUST_BCAST 1 %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}\intel;%{impidir}\bin
+!} else {
+              Start Command = "%{impidir}/bin/mpirun" -np %{partitions} -bootstrap fork -env LD_PRELOAD %{impidir}/lib/libstrtok.so -env I_MPI_ADJUST_REDUCE 2 -env I_MPI_ADJUST_ALLREDUCE 2 -env I_MPI_ADJUST_BCAST 1 %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Start Command Prerequisites = mpd.hosts
+              Execution Path = %{impidir}/bin
+!}
+              Executable Suffix = -mpi
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = none
+      END
+
+      START METHOD: Intel MPI Distributed Parallel Consistent Reduction
+              Option = Direct
+!if($^O eq "MSWin32"){
+              Start Command = "%{impidir}\bin\mpiexec" -configfile "%{req:appfile}"
+              Appfile Header = %{req:impi_windist} -genv I_MPI_ADJUST_REDUCE 2 -genv I_MPI_ADJUST_ALLREDUCE 2 -genv I_MPI_ADJUST_BCAST 1
+              Appfile Host Entry = -localroot -envexcl COMPUTERNAME -env CFX_SOLVER_OUTPUT_FILE "%{env:CFX_SOLVER_OUTPUT_FILE}" -env MULTIPORT_ROOT %{mportroot} -env CFX_7ZIP_PATH "%{env:CFX_7ZIP_PATH}" -env %{ldpathvar} %{rldpath} -n %{hostprocs} -host %{hostname} -wdir "%{workdir_host}" %{executable} %{arguments} 
+              Shared Library Path = %{mportlibdir}\intel;%{impidir}\bin
+!} else {
+              Start Command = "%{impidir}/bin/mpirun" -configfile "%{req:appfile}"
+              Appfile Header = -genv I_MPI_PLATFORM auto -r "%{env:I_MPI_MPD_RSH}" -genv I_MPI_ADJUST_REDUCE 2 -genv I_MPI_ADJUST_ALLREDUCE 2 -genv I_MPI_ADJUST_BCAST 1 
+              Appfile Host Entry = -n %{hostprocs} -host %{hostname} -wdir "%{workdir_host}" -env LD_PRELOAD %{impidir}/lib/libmpi_mt.so:%{impidir}/lib/libstrtok.so -env %{ldpathvar} %{rldpath} %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/intel:%{impidir}/lib
+              Start Command Prerequisites = mpd.hosts,impi.memlock
+              Execution Path = %{impidir}/bin
+!}
+              Executable Suffix = -mpi
+              Use Host List = Yes
+              Host Assignment = Block
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = none
+      END
+
+      START METHOD: Open MPI Local Parallel
+              Option = Direct
+              Start Command =  "%{openmpidir}/bin/mpirun" --prefix "%{openmpidir}" --np %{partitions} %{executable} %{arguments}
+              Shared Library Path = %{mportlibdir}/openmpi:%{openmpidir}/lib:%{openmpidir}/lib/openmpi
+              Start Command Prerequisites = openmpi.env
+              Execution Path = %{openmpidir}/bin
+              Executable Suffix = -mpi
+              Use Host List = No
+              Menu Position = 0.4
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64
+      END
+
+      START METHOD: Open MPI Distributed Parallel
+              Option = Direct
+!if ($ENV{CFX_SOLVE_USE_REMOTE_HELPER} eq '0') {
+
+              Start Command = "%{openmpidir}/bin/mpirun" --prefix "%{openmpidir}" -hostfile "%{req:appfile}" -x %{ldpathvar}=%{rldpath} %{executable} %{arguments}
+!} else {
+              Start Command = "%{openmpidir}/bin/mpirun" --prefix "%{openmpidir}" -hostfile "%{req:appfile}" %{cfx5remote} -set-rld-path -set-mport-path openmpi %{executable} %{arguments}
+!}
+              Appfile Host Entry = %{hostname} slots=%{hostprocs}
+              Shared Library Path = %{mportlibdir}/openmpi:%{openmpidir}/lib:%{openmpidir}/lib/openmpi
+              Start Command Prerequisites = openmpi.env
+              Execution Path = %{openmpidir}/bin
+              Executable Suffix = -mpi
+              Use Host List = Yes
+              Host Assignment = Block
+              Menu Position = 0.5
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = linux, linux-amd64
+      END
+
+      START METHOD: Cray MPI Distributed Parallel
+              Option = Direct
+              Shared Library Path = %{mportlibdir}/cray
+              Start Command = aprun -ss -n %{partitions} %{executable} %{arguments}
+              Executable Suffix = -mpi
+              Homogeneous Parallel Only = Yes
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = none
+              Menu Position = 1.3
+      END
+
+      START METHOD: Cray MPI Slurm Native
+              Option = Direct
+              Shared Library Path = %{mportlibdir}/cray
+              Start Command = srun -n %{partitions} %{executable} %{arguments}
+              Executable Suffix = -mpi
+              Homogeneous Parallel Only = Yes
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = none
+              Menu Position = 1.4
+      END
+
+!   my $ccphome=$ENV{CCP_HOME};
+!   my $submitscript=$ENV{CFX_CCS_SUBMIT_SCRIPT};
+!   if (defined $ccphome and defined $submitscript and -d "$ccphome" and -f "$submitscript" ) {
+      START METHOD: Submit to Windows HPC Queue
+              Option = Indirect
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Menu Position = 1.0
+              Indirect Command = "%{env:CFX_CMD_DIR}\cfx5perl" "%{env:CFX_CCS_SUBMIT_SCRIPT}" -part %{partitions} %{indirect_args} %{arguments}
+              Queue Type = Windows HPC
+              Platform List = winnt-amd64
+      END
+!   }
+
+!   my $allowrunms=$ENV{_CFX_ENABLE_MSMPI_SM};
+!   my $msmpi_bindir=$ENV{MSMPI_BIN};
+!   if (defined $allowrunms and (defined $msmpi_bindir or defined $ccphome)) {
+!     $msmpi_bindir = join("\\",$ccphome,'bin') unless (defined $msmpi_bindir and -d $msmpi_bindir);
+      START METHOD: MSMPI
+              Option = Direct
+!      if ($ENV{CFX_SOLVE_USE_REMOTE_HELPER} eq '1') {
+              Appfile Header = "$msmpi_bindir\mpiexec" -genvlist ANSYSLIC_DIR,ANSYSLI_RESERVE_ID,ANSYSLI_USAGE,ANSYSLI_LPF,ANSYS_HPC_PARAMETRIC_SERVER,ANSYS_HPC_PARAMETRIC_ID,ANSYS_PARENT_CHILD_SERVER,ANSYS_PARENT_CHILD_ID,CFX_CMD_DIR,CFX_DATA_DIR,CFX_OUTPUT_SUMMARY_OPTION,CFX_SOLVER_OUTPUT_FILE,MULTIPORT_ROOT,CFX_7ZIP_PATH -genv NO_STOP_MESSAGE 1
+              Appfile Host Entry = -host %{hostname} -np %{hostprocs} -wdir "%{workdir_host}" %{env:MPIEXEC_OPTIONS} %{cfx5remote} -set-rld-path -set-mport-path msmpi %{executable} %{arguments}
+!      } else {
+              Shared Library Path = %{mportlibdir}\msmpi
+              Reset Shared Library Path = Yes
+              Appfile Header = "$msmpi_bindir\mpiexec" -genvlist ANSYSLIC_DIR,ANSYSLI_RESERVE_ID,ANSYSLI_USAGE,ANSYSLI_LPF,ANSYS_HPC_PARAMETRIC_SERVER,ANSYS_HPC_PARAMETRIC_ID,ANSYS_PARENT_CHILD_SERVER,ANSYS_PARENT_CHILD_ID,CFX_CMD_DIR,CFX_DATA_DIR,CFX_OUTPUT_SUMMARY_OPTION,CFX_SOLVER_OUTPUT_FILE,MULTIPORT_ROOT,CFX_7ZIP_PATH -genv NO_STOP_MESSAGE 1 -genv %{ldpathvar} %{rldpath}
+              Appfile Host Entry = -host %{hostname} -np %{hostprocs} -wdir "%{workdir_host}" %{env:MPIEXEC_OPTIONS} %{executable} %{arguments}
+!      }
+              Start Command = "%{req:msmpi_script}"
+              Executable Suffix = -mpi
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Platform List = winnt-amd64
+      END
+!   }
+
+!   my $qcfx5solveScript = "$ENV{CFX_CMD_DIR}/../config/qcfx5solve.pl";
+!   if (-e $qcfx5solveScript) {
+      START METHOD: Submit to PBS Queue
+  #
+  # Note: This start method requires that a qcfx5solve.pl script exists in
+  # the <CFX5ROOT>/config directory of the installation.  An example script can be
+  # copied from the <CFX5ROOT>/extras directory.  The supplied script will likely
+  # need to be modified to account for the local environment of your queuing
+  # system.
+  #
+         Option = Indirect
+         # change '-master cluster' in the following line to point to the cluster queue machine
+         Indirect Command = cfx5perl %{env:CFX5ROOT}/config/qcfx5solve.pl -master cluster -n %{partitions} -solver %{cfx5solve} %{indirect_args} %{arguments}
+         Use Host List = No
+         Minimum Partition Count = 1
+         Maximum Partition Count = Any
+         Menu Position = 1.5
+         Queue Type = PBS
+         Availability = Beta Feature
+      END
+!   }
+  #
+  # Note: Submitting to a unix/linux machine from Windows requires that a common
+  # drive be mapped on the Windows machine. The -drivemap argument then searches
+  # through common solver arguments and set-up files to substitute the windows drive
+  # letter to the correct directory root for the unix machine.  This method has
+  # been shown to work for simple cases, but can be easily broken.  The following
+  # Start Method is provided as a starting point for launching from Windows to Unix
+  # machines.
+  #
+  #    START METHOD: Submit to PBS Queue from Windows
+  #       Option = Indirect
+  #       # change '-master cluster' in the following line to point to the cluster queue machine
+  #       # change drive map to reflect windows/unix drive root mapping
+  #       # -solver should point to the cfx5solve script on the remote machine (or it should be included in the path)
+  #       Indirect Command = cfx5perl "%{env:CFX5ROOT}\config\qcfx5solve.pl" -master cluster -n %{partitions} -drivemap Z:\,/home/srelias/ -solver /Projects/CFX5/CFX-5-build/bin/cfx5solve %{indirect_args} %{arguments}
+  #       Use Host List = No
+  #       Minimum Partition Count = 1
+  #       Maximum Partition Count = Any
+  #    END
+  #
+
+!   my $uge_submit_script = $ENV{CFX_UGE_SUBMIT_SCRIPT} || "$ENV{CFX_CMD_DIR}/perllib/cfx5uge.pl";
+      START METHOD: Submit to UGE Queue
+        Option = Indirect
+        Indirect Command = "%{env:CFX_CMD_DIR}/cfx5perl" "$uge_submit_script" -part %{partitions} -def %{deffile} %{indirect_args} %{arguments}
+        Use Host List = No
+        Menu Position = 1.1
+        Minimum Partition Count = 1
+        Maximum Partition Count = Any
+        Queue Type = UGE
+        Platform List = linux, linux-amd64
+      END
+
+      START METHOD: Submit Operating Point
+        Option = Indirect
+        Indirect Command = "%{env:CFX_CMD_DIR}/cfx5solve" -operating-point-startup-path "%{workdir}" -name %{name} %{indirect_args}
+        Platform List = none
+      END
+
+      START METHOD: Submit to Remote Solve Manager
+        Indirect Command = "%{env:CFX_CMD_DIR}/cfx5rsm" -part %{partitions} %{indirect_args} %{arguments}
+        Option = Indirect
+        Indirect Finalization = Yes
+        Use Host List = No
+        Menu Position = 1.2
+        Minimum Partition Count = 1
+        Maximum Partition Count = Any
+        Availability = Beta Feature
+        Queue Type = RSM
+      END
+  #
+  # Deprecated and unsupported start methods
+  # ----------------------------------------
+  #
+  # These no longer show up in the Solver Manager but are included
+  # here for backwards compatibility
+  #
+
+! if (defined $ENV{PVM_ROOT} and -d $ENV{PVM_ROOT}) {
+      START METHOD: PVM Local Parallel
+              Option = Direct
+              Start Command = %{executable} %{arguments}
+              Executable Suffix = -pvm
+              Use Host List = No
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Menu Position = 0.6
+              Custom PVM Setup = yes
+              #Local Error File = %{tmpdir}/pvml.%{uid}.%{hostname}
+              Local Error File = %{tmpdir}/pvml.%{uid}
+              Start Command Prerequisites = phst,hst
+              Platform List = linux-amd64, aix
+      END
+
+      START METHOD: PVM Distributed Parallel
+              Option = Direct
+              Start Command = %{executable} %{arguments}
+              Executable Suffix = -pvm
+              Use Host List = Yes
+              Minimum Partition Count = 2
+              Maximum Partition Count = Any
+              Menu Position = 0.7
+              Custom PVM Setup = yes
+              #Local Error File = /tmp/pvml.%{uid}.%{hostname}
+              Local Error File = /tmp/pvml.%{uid}
+              Start Command Prerequisites = phst,hst
+              Platform List = linux-amd64, aix
+      END
+! }
+
+    END
+  END
+END

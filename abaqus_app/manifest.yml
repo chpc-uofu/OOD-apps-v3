@@ -1,0 +1,15 @@
+---
+name: Abaqus
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [Abaqus] GUI on one of the [HPC clusters]
+  or on a [Frisco node].
+  You will be able to interact with the Abaqus GUI through a VNC session.
+  Please, note that this license is limited to research groups that own the license. If the application does not start, this is most likely the problem. Contact us at helpdesk@chpc.utah.edu.
+
+  [Abaqus]: https://www.3ds.com/products-services/simulia/products/abaqus
+  [HPC clusters]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

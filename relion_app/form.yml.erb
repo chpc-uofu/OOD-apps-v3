@@ -1,0 +1,38 @@
+<%
+app_name = "RELION"
+template_root = "/var/www/ood/apps/templates/"
+%>
+---
+title: <%= app_name %>
+attributes:
+  version:
+    widget: select
+    label: <%= app_name %> version
+    help: "This defines the version of <%= app_name %> you want to load."
+    options:
+      - [ "3.1.2-cpu",   "relion/3.1.2-cpu"   ]
+      - [ "3.1.2-gpu",   "relion/3.1.2-gpu"   ]
+  cluster:
+    widget: "select"
+    options:
+      <% IO.foreach(template_root+"clusters") do |line| %>
+      - [ "<%= line.to_s.strip %>" ]
+      <% end %>    
+    help: |
+      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+
+<% IO.foreach(template_root+"job_params") do |line| %>
+<%= line %>
+<% end %>    
+
+form:
+  - version
+  - cluster
+  - num_cores
+  - bc_num_hours
+  - bc_account
+  - bc_queue
+  - memtask
+  - gpu_type
+  - bc_vnc_resolution
+  - bc_email_on_started

@@ -1,0 +1,29 @@
+
+echo starting before
+sleep 2
+
+# Export the module function if it exists
+[[ $(type -t module) == "function" ]] && export -f module
+module list
+
+# override
+port_used () {
+  local port="${1#*:}"
+  local host=$((expr "${1}" : '\\(.*\\):' || echo "localhost") | awk 'END{print $NF}')
+  lsof -i :"${port}" &> /dev/null
+}
+export -f port_used
+
+# Find available port to run server on
+port=$(find_port ${host})
+
+export CONFIG_FILE="${PWD}/matlab.rc"
+#### create a resoure file matlab.rc
+cat > "${CONFIG_FILE}" << EOL
+export MWI_APP_PORT=${port}
+export MWI_BASE_URL="/matlab"
+export MATLAB_LOG_DIR=/tmp
+export TMPDIR="/tmp"
+export MWI_EXT_URL="ondemand.chpc.utah.edu"
+export MLM_LICENSE_FILE=27000@ls1.chpc.utah.edu,27000@ls2.chpc.utah.edu,27000@ls3.chpc.utah.edu
+EOL

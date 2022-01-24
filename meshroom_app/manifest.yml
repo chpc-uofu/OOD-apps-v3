@@ -1,0 +1,10 @@
+---
+name: Meshroom
+category: Interactive Apps
+subcategory: Visualization
+role: batch_connect
+description: |
+  This app will launch [Meshroom] on a [Frisco node]. You will be able to interact with the Meshroom GUI through a VNC session.
+
+  [Meshroom]: https://alicevision.org/#meshroom
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php

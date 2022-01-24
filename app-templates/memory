@@ -1,0 +1,3 @@
+**default** - Use default, 4 GB per task.
+**512M** - Use 512 MB.
+**128G** - Use 128 GB, this is the maximum on notchpeak-shared-short.

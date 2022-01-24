@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cat << EOT
+<b>1. Choose "Parallel" in "Processing Options"</b>
+<b>2. Set number of processes:</b> <tt>$(cat $PBS_NODEFILE | wc -l)</tt>
+<b>3. Click "Show More Options</b>
+<b>4. Choose "Parallel Settings"</b>
+<b>5. Set "Interconnects":</b> <tt>Infiniband</tt>
+<b>6. Set "Run Types":</b> <tt>Distributed Memory on Cluster</tt>
+<b>7. Set "<u>File Containing</u> Machine Names":</b>
+<tt>$(echo $PBS_NODEFILE)</tt>
+<b>8. Click "OK"</b>
+EOT

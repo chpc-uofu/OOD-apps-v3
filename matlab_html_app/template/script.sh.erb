@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Load the required environment
+module load <%= context.version %>
+
+#ml use /uufs/chpc.utah.edu/common/home/u0101881/MyModules
+#ml miniconda3/dask
+export PATH=/uufs/chpc.utah.edu/sys/installdir/miniconda3/matlab-web-app/bin:$PATH
+#source /uufs/chpc.utah.edu/sys/installdir/miniconda3/matlab-web-app/etc/profile.d/conda.sh
+
+source ${CONFIG_FILE}
+
+echo ""
+echo "To use the web-desktop: http://${MWI_EXT_URL}${MWI_BASE_URL}/index.html"
+echo ""
+
+# Workaround for directory permission error
+#unset XDG_RUNTIME_DIR
+#export XDG_RUNTIME_DIR=""
+
+matlab-jupyter-app

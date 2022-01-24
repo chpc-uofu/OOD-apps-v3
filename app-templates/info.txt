@@ -1,0 +1,9 @@
+
+Apps with explicit modules:
+RELION - compiler/MPI dependency
+STATA - only 1 module
+
+Apps w/o modules
+VS Code - no module
+Jupyter Lab - user specified module
+Jupyter - user specified module

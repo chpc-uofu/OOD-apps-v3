@@ -1,0 +1,13 @@
+---
+name: IDV
+category: Interactive Apps
+subcategory: Visualization
+role: batch_connect
+description: |
+  This app will launch a [IDV] GUI on a [HPC cluster] or on a [Frisco node]. You
+  will be able to interact with the IDV GUI through a VNC session.
+
+  [IDV]: https://www.unidata.ucar.edu/software/idv/5_7/docs/userguide/index.html
+  [HPC clusters]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+

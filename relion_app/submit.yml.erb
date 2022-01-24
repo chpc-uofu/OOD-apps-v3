@@ -1,0 +1,23 @@
+<%-
+  emailcmd = '/uufs/chpc.utah.edu/sys/bin/CHPCEmailLookup.sh ' + ENV["USER"]
+  emailaddr = %x[ #{emailcmd}]
+-%>
+
+---
+batch_connect:
+  template: vnc
+script:
+  email: <%= emailaddr %>
+  <%- if /frisco/.match(cluster) == nil -%>
+  native:
+    - "-n"
+    - "<%= num_cores %>"
+    <%- if gpu_type != "none" -%>
+    - "--gres=gpu:<%= gpu_type %>"
+    <%- end -%>
+    <%- if memtask != "default" -%>
+    - "--mem"
+    - "<%= memtask %>"
+    <%- end -%>
+  <%- end -%>
+

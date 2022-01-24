@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# debugging info
+module list
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Start Jupyter Notebook Server
+#
+<%= context.custom_environment.gsub /\r\n?/, "\n" %>
+
+# Workaround for directory permission error
+#unset XDG_RUNTIME_DIR
+#export XDG_RUNTIME_DIR=""
+
+# List available kernels for debugging purposes
+#set -x
+jupyter kernelspec list
+{ set +x; } 2>/dev/null
+echo "TTT - $(date)"
+
+echo srun
+srun hostname -s
+
+echo Interface is <%= context.interface %>
+#jupyter notebook --generate-config 
+# Launch the Jupyter Notebook Server
+# jupyter notebook --config="${CONFIG_FILE}" --debug
+jupyter <%= context.interface %> --config="${CONFIG_FILE}" 

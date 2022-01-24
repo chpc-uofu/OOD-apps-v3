@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+#env |grep SLURM
+# Clean the environment
+module purge
+
+# this is needed to make the IBM/Platform MPI happy with SLURM
+unset SLURM_GTIDS
+
+# debug info
+#export ANSYS_FRAMEWORK_DEVELOPMENT=1
+#export WBTracing=true
+
+# Work around spam message about dconf write permissions
+#export XDG_RUNTIME_DIR="/tmp/${UID}"
+unset XDG_RUNTIME_DIR
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Launch Xfce Window Manager and Panel
+#
+
+(
+#  module restore
+  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+  export XDG_CACHE_HOME="$(mktemp -d)"
+  xfwm4 --compositor=off --daemon --sm-client-disable
+  xsetroot -solid "#D3D3D3"
+  xfsettingsd --sm-client-disable
+  xfce4-panel --sm-client-disable
+) &
+#
+# Start ANSYS Workbench
+#
+
+# Load the required environment
+#module load intel # for Intel MPI
+#module load gcc/4.8.5 impi # for Intel MPI
+module load <%= context.version %>
+
+# Another ANSYS job with the same job name (file) is already running in this
+# directory or the file.lock file has not been deleted from an abnormally
+# terminated ANSYS run.  To disable this check, set the ANSYS_LOCK environment
+# variable to OFF.
+export ANSYS_LOCK="OFF"
+
+#
+# CFX Related Options
+#
+
+# Disable hardware rendering mode
+export CUE_GRAPHICS="mesa"
+
+# Fix bug when running Intel MPI code on OSC
+export I_MPI_PMI_EXTENSIONS=on
+
+# Add custom "OSC MPI" as a start method
+# use generic start method
+export CFX5_START_METHODS_CCL="<%= session.staged_root.join("cfx_assets", "start-methods.ccl") %>"
+
+# Make a hosts file that CFX will use in Parallel Distributed
+mkdir -p "${HOME}/.cfx"
+export SLURM_NODEFILE="${HOME}/.cfx/nodes.${SLURM_JOBID}"
+#MC srun starts with empty environment, except for SLURM variables
+#MC this is to not export the OOD server environment from where the job is submitted
+#MC as a workaround use the --export=ALL option
+#MC srun --export=ALL hostname -s | sort > $SLURM_NODEFILE 
+#MC now taken care of by export SLURM_EXPORT_ENV=ALL in the cluster def file in /etc/ood/config/clusters.d
+srun hostname -s | sort > $SLURM_NODEFILE 
+export CFX5_HOSTS_CCL="${HOME}/.cfx/hostinfo.${SLURM_JOBID}"
+NODES=$(tr '\n' ',' < "${SLURM_NODEFILE}" | sed -e 's/ /,/g')
+NODES=${NODES%?}
+touch "${CFX5_HOSTS_CCL}"
+
+# ANSYS 21.1 cfx5parhosts crashes with 
+# Error retrieving full host information list: getChildList: unable to find the requested path
+# ANSYS 20.1 is fine, though the perl, etc, are the same
+# see https://blogs.fau.de/zeiser/2012/08/23/why-cfx5solve-from-ansys-13-0-fails-on-suse-sles11sp2/
+if [ <%= context.version %> = "ansys/21.1" ]; then
+  /uufs/chpc.utah.edu/sys/installdir/ansys/20.1/v201/CFX/bin/cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
+else
+  cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
+fi
+
+# Use the Intel MPI option in the CFX GUI
+HOSTINFO=$(head -n -2 "${CFX5_HOSTS_CCL}")
+cat > "${CFX5_HOSTS_CCL}" << EOL
+${HOSTINFO}
+    SOLVER STEP CONTROL:
+      Runtime Priority = Standard
+      MEMORY CONTROL:
+        Memory Allocation Factor = 1.0
+      END
+      PARALLEL ENVIRONMENT:
+        Parallel Host List = ${NODES}
+        Start Method = Intel MPI Distributed Parallel
+      END
+    END
+  END # EXECUTION CONTROL
+END # SIMULATION CONTROL
+EOL
+
+#
+# RSH & SSH wrappers
+#
+
+# Add RSH and SSH wrappers for Fluent and CFX
+# don't need those ...
+# export PATH="<%= session.staged_root.join("bin") %>:${PATH}"
+
+# CFX's Intel MPI wants unlimited max_locked_memory
+ulimit -l unlimited
+
+# Launch ANSYS Workbench
+module list
+set -x
+# Use Mesa for graphics
+runwb2 -oglmesa
