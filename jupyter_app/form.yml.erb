@@ -12,10 +12,19 @@ attributes:
     options:
       - [ "Notebook", "notebook" ]
       - [ "Lab", "lab" ]
+  python:
+    widget: select
+    label: <%= app_name %> Python version
+    help: "This defines the Python distribution of <%= app_name %> you want to start."
+    options:
+      - [ "CHPC Python 3.6.3", "python/3.6.3 R/3.6.1" ]
+      - [ "CHPC Python 3.9.7", "python/3.9.7 R/4.1.1" ]
+      - [ "CHPC Deep Learning 1.0", "deeplearning/1.0" ]
+      - [ "Custom (Environment Setup below)", "custom" ]
   custom_environment:
     widget: text_area
-    label: Environment Setup (drag text area to enlarge)
-    help: "Enter commands (module load, source activate, etc) to create your desired Jupyter environment; jupyter MUST be on your path and either notebook or jupyterlab installed in your Python environment. For instructions how to install your own Python using Miniconda see https://www.chpc.utah.edu/documentation/software/python-anaconda.php. If you don't have one yet use 'module load python/3.6.3 R/3.6.1'"
+    label: Environment Setup for Custom Python
+    help: "Enter commands (module load, source activate, etc) to create your desired Jupyter environment; jupyter MUST be on your path and either notebook or jupyterlab installed in your Python environment. For instructions how to install your own Python using Miniconda see https://www.chpc.utah.edu/documentation/software/python-anaconda.php."
     value: |
         module load python/3.6.3 R/3.6.1
 
@@ -34,6 +43,7 @@ attributes:
 
 form:
   - interface
+  - python
   - custom_environment
   - cluster
   - num_cores

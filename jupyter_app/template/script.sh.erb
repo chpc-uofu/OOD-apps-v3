@@ -6,14 +6,18 @@ module list
 # Set working directory to home directory
 cd "${HOME}"
 
-#
-# Start Jupyter Notebook Server
-#
-<%= context.custom_environment.gsub /\r\n?/, "\n" %>
-
+<%- if context.python == "custom" -%>
+  <%= context.custom_environment.gsub /\r\n?/, "\n" %>
+<%- else -%>
+  module load <%= context.python %>
+<%- end -%>
 # Workaround for directory permission error
 #unset XDG_RUNTIME_DIR
 #export XDG_RUNTIME_DIR=""
+
+#
+# Start Jupyter Notebook Server
+#
 
 # List available kernels for debugging purposes
 #set -x

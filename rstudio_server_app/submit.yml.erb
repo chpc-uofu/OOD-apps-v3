@@ -6,6 +6,8 @@
 ---
 batch_connect:
   template: "basic"
+  conn_params:
+    - csrftoken
 script:
   email: <%= emailaddr %>
   <%- if /frisco/.match(cluster) == nil -%>

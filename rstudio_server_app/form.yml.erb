@@ -12,18 +12,15 @@ attributes:
     options:
       - [ "R 4.0.2 CHPC build", "4.0.2"]
       - [ "R 4.1.1 CHPC build", "4.1.1"]
+      - [ "R 4.1.2 Basic packages", "4.1.2-basic"]
+      - [ "R 4.1.2 Bioconductor packages", "4.1.2-bioconductor"]
+      - [ "R 4.1.2 Geospatial packages", "4.1.2-geospatial"]
       - [ "R 4.0.2 Basic packages", "4.0.2-basic"]
       - [ "R 4.0.3 Bioconductor packages", "4.0.3-bioconductor"]
       - [ "R 4.0.3 Geospatial packages", "4.0.3-geospatial"]
       - [ "R 3.6.2 Basic packages", "3.6.2-basic"]
       - [ "R 3.6.2 Bioconductor packages", "3.6.2-bioconductor"]
       - [ "R 3.6.2 Geospatial packages", "3.6.2-geospatial"]
-  custom_environment:
-    widget: text_area
-    label: Environment Setup (drag text area to enlarge)
-    help: "Enter commands (module load, source activate, etc) to create your desired JupyterLab environment; jupyter MUST be on your path. For instructions how to install ypur own Python using Miniconda see https://www.chpc.utah.edu/documentation/software/python-anaconda.php. If you don't have one yet use 'module load python/3.6.3 R/3.6.1'"
-    value: |
-        module load python/3.6.3 R/3.6.1
 
   cluster:
     widget: "select"
