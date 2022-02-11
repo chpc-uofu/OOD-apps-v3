@@ -6,7 +6,7 @@
 An interactive app designed for Open OnDemand that launches a Jupyter
 server on a CHPC infrastructure.
 
-CHPC modifications include local cluster and Linux host adapter settings and custom Python environment entry.
+CHPC modifications include local cluster and Linux host adapter settings, choice of Jupyter Notebook or Lab, and custom Python environment entry.
 
 Most content below is from the original [OSC app](https://github.com/OSC/bc_osc_jupyter).
 

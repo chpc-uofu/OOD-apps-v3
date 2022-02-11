@@ -1,7 +1,7 @@
-# Batch Connect - CHPC STATA
+# Batch Connect - CHPC IDV
 
 
-A Batch Connect app designed for Open OnDemand that launches STATA on a CHPC infrastructure.
+A Batch Connect app designed for Open OnDemand that launches IDV on a CHPC infrastructure.
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@ This Batch Connect app requires the following software be installed on the
 **compute nodes** that the batch job is intended to run on (**NOT** the
 OnDemand node):
 
-- [STATA] 
+- [IDV] 
 - [Xfce Desktop] 4+
 
 For VNC server support:
@@ -27,7 +27,7 @@ For hardware rendering support (not on CHPC):
 - [Lmod] 6.0.1+ or any other `module purge` and `module load <modules>` based
   CLI used to load appropriate environments within the batch job
 
-[STATA]: https://www.stata.com/
+[IDV]: https://www.unidata.ucar.edu/software/idv/5_7/docs/userguide/index.html
 [Xfce Desktop]: https://xfce.org/
 [TurboVNC]: http://www.turbovnc.org/
 [websockify]: https://github.com/novnc/websockify

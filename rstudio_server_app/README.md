@@ -3,12 +3,25 @@
 ![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_rstudio_server.svg)
 [![GitHub License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-An interactive app designed for OSC OnDemand that launches an RStudio Server
-within an Owens batch job.
+An interactive app designed for OSC OnDemand that launches an RStudio Server.
 
-Modifications made for CHPC's notchpeak-shared partition.
+CHPC's modifications include:
 
-As of Mar20 we are using Docker containers from rocker and bioconductor:
+- support for both locally installed and containerized R and RStudio Server.
+
+- three containers are supported, two from Rocker (Basic, Geospatial) and one from Bioconductor. The Geospatial and Bioconductor have system installed libraries for respective fields (e.g. GDAL in Geospatial) to enable easier R library installation by the users.
+
+Changes:
+
+Feb22
+
+- allows for use of RStudio Server 1.4 and newer which is using additional csrf token for authentication, based on [Harvard FAS](https://github.com/fasrc/fas-ondemand-rstudio) and [NMSU](https://gitlab.com/nmsu_hpc/ood_bc_rstudio).
+- adding sqlite database as RS 1.4 requires it.
+- update to the latest Rocker and Bioconductor containers.
+
+Mar20 
+
+We are using Docker containers from rocker and bioconductor:
 - base R image, based on [https://hub.docker.com/r/rocker/rstudio](https://hub.docker.com/r/rocker/rstudio)
 - geospatial R image, based on [https://hub.docker.com/r/rocker/geospatial](https://hub.docker.com/r/rocker/geospatial) - this has installed gdal and rgdal, among other things.
 - bioinfomatics R image, based on [https://hub.docker.com/r/bioconductor/bioconductor_docker](https://hub.docker.com/r/bioconductor/bioconductor_docker) - this has installed most if not all bioconductor system dependencies, like hdf5, udunits, gdal, ... Therefore user based R library installations should work as these system based dependencies are present.
@@ -17,7 +30,9 @@ We build the container images and store them locally as e.g. ```singularity buil
 
 Stuff below is deprecated now - the rocker and bioconductor based Docker images work without need to hand modify the container
 
-As of Nov19 using Virginia Tech's R containers, as compared to previously used OSC's. The main reason for this is that VT includes some commonly used R packages in the container so users don't have to install them, and, they have different containers for different needs (Bioinformatics, Geospatial).
+Nov19 
+
+Using Virginia Tech's R containers, as compared to previously used OSC's. The main reason for this is that VT includes some commonly used R packages in the container so users don't have to install them, and, they have different containers for different needs (Bioinformatics, Geospatial).
 
 The containers are at: [https://hub.docker.com/u/rsettlag](https://hub.docker.com/u/rsettlag)  
 VT's OOD apps are at: [https://github.com/rsettlage/ondemand2](https://github.com/rsettlage/ondemand2)
