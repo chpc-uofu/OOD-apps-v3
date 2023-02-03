@@ -17,7 +17,8 @@ cd "${HOME}"
   export XDG_CACHE_HOME="$(mktemp -d)"
   module restore
   set -x
-  xfwm4 --compositor=off --daemon --sm-client-disable
+  # xfwm4 --compositor=off --daemon --sm-client-disable
+  xfwm4 --compositor=off --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
   xfce4-panel --sm-client-disable
@@ -51,6 +52,10 @@ module load intel <%= context.version %>
 
 # Launch COMSOL Multiphysics
 unset SLURM_GTIDS
+# abaqus/2022 needs a specific MPI setting
+# for details: https://community.intel.com/t5/Intel-oneAPI-HPC-Toolkit/bug-mpiexec-segmentation-fault/m-p/1183364
+export I_MPI_HYDRA_TOPOLIB=ipl
+
 module list
 set -x
 abaqus cae -mesa \

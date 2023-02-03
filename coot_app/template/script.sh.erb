@@ -17,7 +17,8 @@ cd "${HOME}"
   export XDG_CACHE_HOME="$(mktemp -d)"
   module restore
   set -x
-  xfwm4 --compositor=off --daemon --sm-client-disable
+  # xfwm4 --compositor=off --daemon --sm-client-disable
+  xfwm4 --compositor=off --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
   xfce4-panel --sm-client-disable
@@ -28,7 +29,7 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load coot/0.8.7
+module load <%= context.version %>
 
 # Output debug info
 module list

@@ -17,7 +17,8 @@ cd "${HOME}"
   export XDG_CACHE_HOME="$(mktemp -d)"
   module restore
   set -x
-  xfwm4 --compositor=off --daemon --sm-client-disable
+  xfwm4 --compositor=off --sm-client-disable
+  # xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
   xfce4-panel --sm-client-disable
@@ -42,7 +43,7 @@ set -x
 <%- if /frisco/.match(context.cluster) == nil -%>
   runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
 <%- else -%>
-  vglrun runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
+  vglrun -d :0.0 -c proxy runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
 <%- end -%>
 IDV_EXIT_CODE=${PIPESTATUS[0]}
 { set +x; } 2>/dev/null

@@ -21,13 +21,14 @@ cd "${HOME}"
 #
 # Launch Xfce Window Manager and Panel
 #
-
+#set -x
 (
 #  module restore
   export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
   export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
   export XDG_CACHE_HOME="$(mktemp -d)"
-  xfwm4 --compositor=off --daemon --sm-client-disable
+  xfwm4 --compositor=off --sm-client-disable
+  # xfwm4 --compositor=off --daemon --sm-client-disable
   xsetroot -solid "#D3D3D3"
   xfsettingsd --sm-client-disable
   xfce4-panel --sm-client-disable
@@ -61,39 +62,41 @@ export I_MPI_PMI_EXTENSIONS=on
 # use generic start method
 export CFX5_START_METHODS_CCL="<%= session.staged_root.join("cfx_assets", "start-methods.ccl") %>"
 
-# Make a hosts file that CFX will use in Parallel Distributed
-mkdir -p "${HOME}/.cfx"
-export SLURM_NODEFILE="${HOME}/.cfx/nodes.${SLURM_JOBID}"
-#MC srun starts with empty environment, except for SLURM variables
-#MC this is to not export the OOD server environment from where the job is submitted
-#MC as a workaround use the --export=ALL option
-#MC srun --export=ALL hostname -s | sort > $SLURM_NODEFILE 
-#MC now taken care of by export SLURM_EXPORT_ENV=ALL in the cluster def file in /etc/ood/config/clusters.d
-srun hostname -s | sort > $SLURM_NODEFILE 
-export CFX5_HOSTS_CCL="${HOME}/.cfx/hostinfo.${SLURM_JOBID}"
-NODES=$(tr '\n' ',' < "${SLURM_NODEFILE}" | sed -e 's/ /,/g')
-NODES=${NODES%?}
-touch "${CFX5_HOSTS_CCL}"
+if [ -v "$SLURM_JOBID" ]; then
 
-# ANSYS 21.1 cfx5parhosts crashes with 
-# Error retrieving full host information list: getChildList: unable to find the requested path
-# ANSYS 20.1 is fine, though the perl, etc, are the same
-# see https://blogs.fau.de/zeiser/2012/08/23/why-cfx5solve-from-ansys-13-0-fails-on-suse-sles11sp2/
-if [ <%= context.version %> = "ansys/21.1" ]; then
-  /uufs/chpc.utah.edu/sys/installdir/ansys/20.1/v201/CFX/bin/cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
-else
-  cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
-fi
+ # Make a hosts file that CFX will use in Parallel Distributed
+ mkdir -p "${HOME}/.cfx"
+ export SLURM_NODEFILE="${HOME}/.cfx/nodes.${SLURM_JOBID}"
+ #MC srun starts with empty environment, except for SLURM variables
+ #MC this is to not export the OOD server environment from where the job is submitted
+ #MC as a workaround use the --export=ALL option
+ #MC srun --export=ALL hostname -s | sort > $SLURM_NODEFILE 
+ #MC now taken care of by export SLURM_EXPORT_ENV=ALL in the cluster def file in /etc/ood/config/clusters.d
+ srun hostname -s | sort > $SLURM_NODEFILE 
+ export CFX5_HOSTS_CCL="${HOME}/.cfx/hostinfo.${SLURM_JOBID}"
+ NODES=$(tr '\n' ',' < "${SLURM_NODEFILE}" | sed -e 's/ /,/g')
+ NODES=${NODES%?}
+ touch "${CFX5_HOSTS_CCL}"
+ 
+ # ANSYS 21.1 cfx5parhosts crashes with 
+ # Error retrieving full host information list: getChildList: unable to find the requested path
+ # ANSYS 20.1 is fine, though the perl, etc, are the same
+ # see https://blogs.fau.de/zeiser/2012/08/23/why-cfx5solve-from-ansys-13-0-fails-on-suse-sles11sp2/
+ if [ <%= context.version %> = "ansys/21.1" ]; then
+   /uufs/chpc.utah.edu/sys/installdir/ansys/20.1/v201/CFX/bin/cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
+ else
+   cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
+ fi
 
-# Use the Intel MPI option in the CFX GUI
-HOSTINFO=$(head -n -2 "${CFX5_HOSTS_CCL}")
-cat > "${CFX5_HOSTS_CCL}" << EOL
+ # Use the Intel MPI option in the CFX GUI
+ HOSTINFO=$(head -n -2 "${CFX5_HOSTS_CCL}")
+ cat > "${CFX5_HOSTS_CCL}" << EOL
 ${HOSTINFO}
     SOLVER STEP CONTROL:
       Runtime Priority = Standard
       MEMORY CONTROL:
-        Memory Allocation Factor = 1.0
-      END
+         Memory Allocation Factor = 1.0
+    END
       PARALLEL ENVIRONMENT:
         Parallel Host List = ${NODES}
         Start Method = Intel MPI Distributed Parallel
@@ -102,6 +105,8 @@ ${HOSTINFO}
   END # EXECUTION CONTROL
 END # SIMULATION CONTROL
 EOL
+
+fi
 
 #
 # RSH & SSH wrappers
@@ -116,6 +121,6 @@ ulimit -l unlimited
 
 # Launch ANSYS Workbench
 module list
-set -x
+#set -x
 # Use Mesa for graphics
 runwb2 -oglmesa

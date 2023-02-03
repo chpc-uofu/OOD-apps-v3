@@ -12,7 +12,8 @@ attributes:
   version:
     widget: select
     label: <%= app_name %> version
-    help: "This defines the version of <%= app_name %> you want to load."
+    help: |
+      This defines the version of <%= app_name %> you want to load.<br> NOTE: First start of the program takes ~10 minutes, you will be seeing a blank browser tab. Wait till the initialization completes.
     options:
       <% modules.lines.reverse.each do |line| %>
       <% unless line.to_s.strip == "" %>

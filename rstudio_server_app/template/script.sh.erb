@@ -6,7 +6,7 @@
 module purge
 
 # Local RStudio Server with CHPC built R versions
-<%- if context.version == "4.0.2" or context.version == "4.1.1" -%>
+<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   module load R/<%= context.version %>
   echo R version is <%= context.version %>
   RSPATH="/uufs/chpc.utah.edu/sys/installdir/rstudio-server/2021.09.2/bin/"
@@ -17,6 +17,10 @@ module purge
   module use /uufs/chpc.utah.edu/sys/installdir/rstudio-singularity/modulefiles
   module load singularity rstudio_singularity/<%= context.version %>
 <%- end -%>
+
+if [ ! -d "/scratch/local/${USER}" ]; then
+    mkdir /scratch/local/${USER}
+fi
 
 WORKDIR=/scratch/local/${USER}/${SLURM_JOB_ID}
 
@@ -35,6 +39,8 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   # Log all output from this script
   export RSESSION_LOG_FILE="${PWD}/rsession.log"
   exec &>>"\${RSESSION_LOG_FILE}"
+  #echo R_LIBS_SITE $R_LIBS_SITE
+  #env
 
   echo "Launching rsession..."
   exec ${RSPATH}rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
@@ -87,9 +93,10 @@ find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -
 echo "Starting up rserver..."
 set -x
 
-<%- if context.version == "4.0.2" or context.version == "4.1.1" -%>
+<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   # sqlite is needed for the RS database      
-  ml sqlite
+  # it's part of the R8 OS installation, module below was built on CentOS 7
+  # ml sqlite
 
   ${RSPATH}rserver \
     --server-user ${USER} \
@@ -125,6 +132,7 @@ set -x
     --secure-cookie-key-file "${TMPDIR}/rstudio-server/secure-cookie-key" \
     --server-daemonize=0 \
     --server-app-armor-enabled=0 \
+    --rsession-which-r=/usr/local/bin/R \
     --rsession-config-file ${WORKDIR}/rserver.conf
 
 # this option is only in RS >= 1.4 so bind mount instead

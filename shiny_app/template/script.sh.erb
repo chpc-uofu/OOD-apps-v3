@@ -2,13 +2,18 @@
 
 export app_path_source=<%= context.shiny_app.gsub /\r\n?/, "\n" %>
 
+if [ $OSREL == "Rocky" ]; then
+  R_MOD    = "module load R/4.1.3"
+else
+  R_MOD    = "module load R/3.6.1"
+fi
 <%-
   # Helper
   cache_root = Pathname.new("${CACHE_DIR}")
 
   # Configure R
   r_script = session.staged_root.join("launcher.R")
-  r_env    = "module load R/3.6.1"
+  r_env    = "${R_MOD}"
   r_cmd    = "R"
 
   # Configure Shiny
@@ -119,7 +124,13 @@ cd "${HOME}"
 umask 077
 
 # Load the required environment
-<%= r_env %>
+#<%= r_env %>
+
+if [ $OSREL == "Rocky" ]; then
+  module load R/4.1.3
+else
+  module load R/3.6.1
+fi
 
 # Output debug info
 module list

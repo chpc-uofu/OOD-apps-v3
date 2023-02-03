@@ -8,7 +8,7 @@ batch_connect:
   template: vnc
 script:
   email: <%= emailaddr %>
-  <%- if /frisco/.match(cluster) == nil -%>
+  <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
   native:
     <%- if num_cores != "none" -%>
     - "-n <%= num_cores %>"

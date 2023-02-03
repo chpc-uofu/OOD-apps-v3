@@ -6,6 +6,7 @@ APPS="abaqus_app ansysedt_app ansys_workbench_app chpc-systemstatus codeserver_a
 DATE=`date +%Y-%m-%d`
 BAKDIR="/var/www/ood/apps/sys-$DATE"
 
+cd /var/www/ood/apps/sys
 if [[ ! -d $BAKDIR ]]; then
   mkdir -p $BAKDIR
 fi

@@ -22,7 +22,7 @@ attributes:
   cluster:
     widget: "select"
     options:
-      <% IO.foreach(template_root+"interactives") do |line| %>
+      <% IO.foreach(template_root+"interactives_skl") do |line| %>
       - [ "<%= line.to_s.strip %>" ]
       <% end %>    
     help: |
