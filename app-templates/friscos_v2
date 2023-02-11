@@ -1,0 +1,80 @@
+      - [
+          'frisco1',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco2',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco3',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco4',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco5',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco6',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco7',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+      - [
+          'frisco8',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
