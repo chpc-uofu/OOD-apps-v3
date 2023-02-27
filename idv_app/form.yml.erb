@@ -33,19 +33,9 @@ attributes:
     help: |
       Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
 
-<% IO.foreach(template_root+"job_params") do |line| %>
-<%= line %>
-<% end %>    
-
 form:
   - version
   - sitepath
   - cluster
-  - num_cores
-  - bc_num_hours
-  - bc_account
-  - bc_queue
-  - memtask
-  - gpu_type
   - bc_vnc_resolution  
   - bc_email_on_started

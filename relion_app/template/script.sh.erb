@@ -24,19 +24,21 @@ cd "${HOME}"
   xfce4-panel --sm-client-disable
 ) &
 
-#
-# Start COMSOL Multiphysics
-#
-
 # Load the required environment
 # CPU optimized version only runs on Intel >= Haswell
 
 if [ <%= context.version %> = "relion/3.1.2-cpu" ]; then
   ml intel/2019.5.281  impi/2019.5.281
   ml relion/3.1.2-cpu
-else
+elif [ <%= context.version %> = "relion/3.1.2-gpu" ]; then
   ml gcc/4.8.5 impi/2018.1.163
   ml relion/3.1.2-gpu
+elif [ <%= context.version %> = "relion/4.0.0-cpu" ]; then
+  ml intel-oneapi-compilers/2021.4.0  intel-oneapi-mpi/2021.1.1
+  ml relion/4.0.0-cpu
+elif [ <%= context.version %> = "relion/4.0.0-gpu" ]; then
+  ml gcc/8.5.0  intel-oneapi-mpi/2021.1.1
+  ml relion/4.0.0-gpu
 fi
 
 #module load <%= context.version %>

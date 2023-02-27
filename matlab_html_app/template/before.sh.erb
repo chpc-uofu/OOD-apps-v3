@@ -19,11 +19,12 @@ port=$(find_port ${host})
 
 export CONFIG_FILE="${PWD}/matlab.rc"
 #### create a resoure file matlab.rc
+#MC the TMPDIR and LOG_DIR need to be unique for each user
 cat > "${CONFIG_FILE}" << EOL
 export MWI_APP_PORT=${port}
 export MWI_BASE_URL="/matlab"
-export MATLAB_LOG_DIR=/tmp
-export TMPDIR="/tmp"
+export MATLAB_LOG_DIR=/tmp/${USER}
+export TMPDIR="/tmp/${USER}"
 export MWI_EXT_URL="ondemand.chpc.utah.edu"
 export MLM_LICENSE_FILE=27000@ls1.chpc.utah.edu,27000@ls2.chpc.utah.edu,27000@ls3.chpc.utah.edu
 EOL

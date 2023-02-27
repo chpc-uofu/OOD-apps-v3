@@ -34,8 +34,11 @@
            data-hide-gpu-count: true
         ]
       - [
-           'GTX 1080 Ti, SP, general, owner','1080ti',
+           'any','any',
            data-option-for-cluster-ash: false,
+        ]
+      - [
+           'GTX 1080 Ti, SP, general, owner','1080ti',
            data-option-for-cluster-kingspeak: false
         ]
       - [
@@ -105,9 +108,10 @@
            data-option-for-cluster-kingspeak: false
         ]
     help: |
-      - choose **none** if no GPU
-      - SP stands for Single Precision, DP for Double Precision.
-      - Make sure to choose the correct account and partition for the selected GPUs. Some GPUs are on general nodes and some on owner nodes (accessible to all via owner-gpu-guest account).
+      - choose **none** if no GPU.
+      - **any** available GPU for the given cluster and partition.
+      - SP - Single Precision, DP - Double Precision.
+      - Choose the correct account and partition for the selected GPUs. General nodes use __*cluster*-gpu:*cluster*-gpu__ and owner nodes **owner-gpu-guest:*cluster*-gpu-guest**.
       - See [GPU node list](https://chpc.utah.edu/documentation/guides/gpus-accelerators.php#gnl) for details on GPU features and counts per node.
   gpu_count:
     label: "GPU count"
@@ -116,4 +120,3 @@
     min: 1
     max: 8
     step: 1
-    help: "Number of GPUs."

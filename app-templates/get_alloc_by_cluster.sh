@@ -2,8 +2,10 @@
 
 filepath=$HOME/ondemand/data
 
-for cluster in ash kingspeak lonepeak notchpeak crystalpeak redwood scrubpeak; do
+> ${filepath}/cluster.txt
+for cluster in ash kingspeak lonepeak notchpeak; do
 	> ${filepath}/${cluster}.txt
+        echo $cluster >> ${filepath}/cluster.txt
 done
 
 for allocation in `/uufs/chpc.utah.edu/sys/bin/myallocation | grep "Account:" | awk '{print $(NF-4) ":" $(NF-2) ":" $NF}'`; do
@@ -19,3 +21,4 @@ for allocation in `/uufs/chpc.utah.edu/sys/bin/myallocation | grep "Account:" | 
 
 	echo ${account}:${partition} >> ${filepath}/${cluster}.txt
 done
+sync

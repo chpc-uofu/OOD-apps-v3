@@ -29,18 +29,31 @@ attributes:
     label: Environment Setup for Custom Python
     help: "Enter commands (module load, source activate, etc) to create your desired Jupyter environment; jupyter MUST be on your path and either notebook or jupyterlab installed in your Python environment. For instructions how to install your own Python using Miniconda see https://www.chpc.utah.edu/documentation/software/python-anaconda.php."
     value: |
-        module load python/3.6.3 R/3.6.1
+        module load python/3.10.3
 
   cluster:
-    widget: "select"
+    widget: select
     options:
-      <% IO.foreach(template_root+"clusters") do |line| %>
-      - [ "<%= line.to_s.strip %>" ]
-      <% end %>    
-    help: |
-      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+      <%- CustomQueues.clusters.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+<% IO.foreach(template_root+"friscos_v2") do |line| %>
+<%= line %>
+<% end %>    
+<% IO.foreach(template_root+"cluster-help") do |line| %>
+<%= line %>
+<% end %>    
+  custom_accpart:
+    widget: select
+    options:
+      <%- CustomAccPart.accpart.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+<% IO.foreach(template_root+"accpart-help") do |line| %>
+<%= line %>
+<% end %>    
 
-<% IO.foreach(template_root+"job_params") do |line| %>
+<% IO.foreach(template_root+"job_params_v3") do |line| %>
 <%= line %>
 <% end %>    
 
@@ -49,10 +62,10 @@ form:
   - python
   - custom_environment
   - cluster
+  - custom_accpart
   - num_cores
   - bc_num_hours
-  - bc_account
-  - bc_queue
   - memtask
   - gpu_type
+  - gpu_count
   - bc_email_on_started

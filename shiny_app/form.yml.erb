@@ -11,24 +11,41 @@ attributes:
     help: "Enter the path to the Shiny app you want to run. App file in this directory has to be named either app.R or server.R."
     value: |
         ~/R/shiny/app
-  cluster:
-    widget: "select"
+  version:
+    widget: select
+    label: "R version"
+    help: "This defines the version of R that the Shiny app will use."
     options:
-      <% IO.foreach(template_root+"clusters") do |line| %>
-      - [ "<%= line.to_s.strip %>" ]
-      <% end %>    
-    help: |
-      Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
+      - [ "R 4.1.3 CHPC build", "4.1.3"]
+      - [ "R 4.2.2 CHPC build", "4.2.2"]
+  cluster:
+    widget: select
+    options:
+      <%- CustomQueues.clusters.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    value: "notchpeak"
+    cacheable: true
+    help: "Select the cluster to create this session on. For technical reasons this does not work on Friscos."
+  custom_accpart:
+    widget: select
+    options:
+      <%- CustomAccPart.accpart.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+<% IO.foreach(template_root+"accpart-help") do |line| %>
+<%= line %>
+<% end %>    
 
-<% IO.foreach(template_root+"job_params") do |line| %>
+<% IO.foreach(template_root+"job_params_v3") do |line| %>
 <%= line %>
 <% end %>    
 
 form:
   - shiny_app
+  - version
   - cluster
+  - custom_accpart
   - num_cores
   - bc_num_hours
-  - bc_account
-  - bc_queue
   - bc_email_on_started

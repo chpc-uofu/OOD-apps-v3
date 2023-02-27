@@ -4,7 +4,7 @@ category: Interactive Apps
 subcategory: Servers
 role: batch_connect
 description: |
-  This app will launch a [Shiny App] using R/3.6.1 on a [HPC cluster]. The R Shiny app needs to be located at the path listed. The app will be using CHPC default R.
+  This app will launch a [Shiny App] on a [HPC cluster]. The R Shiny app needs to be located at the path listed. The app will be using CHPC default R.
 
   <b>NOTE:</b> For technical reasons the R Shiny app currently does not work on Frisco nodes, if you would like to get it working contact us at helpdesk@chpc.utah.edu.
 

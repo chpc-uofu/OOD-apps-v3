@@ -7,6 +7,8 @@
 batch_connect:
   template: vnc
 script:
+  accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
+  queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
   email: <%= emailaddr %>
   <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
   native:
@@ -15,7 +17,7 @@ script:
     - "-n"
     - "<%= num_cores %>"
     <%- if gpu_type != "none" -%>
-    - "--gres=gpu:<%= gpu_type %>"
+    - "--gres=gpu:<%= gpu_type %>:<%= gpu_count %>"
     <%- end -%>
     <%- if memtask != "default" -%>
     - "--mem"

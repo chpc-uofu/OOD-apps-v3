@@ -22,6 +22,9 @@ for service in "pulseaudio" "rhsm-icon" "spice-vdagent" "tracker-extract" "track
   echo -e "[Desktop Entry]\nHidden=true" > "${AUTOSTART}/${service}.desktop"
 done
 
+# this causes Terminal to automatically start in the desktop
+cp /usr/share/applications/xfce4-terminal.desktop "${AUTOSTART}"
+
 # Run Xfce4 Terminal as login shell (sets proper TERM)
 TERM_CONFIG="${HOME}/.config/xfce4/terminal/terminalrc"
 if [[ ! -e "${TERM_CONFIG}" ]]; then
