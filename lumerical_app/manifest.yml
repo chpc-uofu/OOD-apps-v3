@@ -5,7 +5,7 @@ subcategory: IDEs
 role: batch_connect
 description: |
   This app will launch a [Lumerical DEVICE Suite] GUI on a [HPC cluster] or on a [Frisco node]. You
-  will be able to interact with the COMSOL GUI through a VNC session.
+  will be able to interact with the Lumerical GUI through a VNC session.
   Please, note a limited nature of this license which is owned by a consortium of University research groups. For more information, contact us at helpdesk@chpc.utah.edu.
 
   [Lumerical DEVICE Suite]: https://www.lumerical.com/products/#device

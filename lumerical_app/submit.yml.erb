@@ -12,11 +12,17 @@ script:
   email: <%= emailaddr %>
   <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
   native:
-    - "-n"
+    - "-N"
+    - "<%= num_nodes %>"
+    - "--ntasks-per-node"
     - "<%= num_cores %>"
-    <%- if memtask != "default" -%>
+    <%- if memtask != "" and memtask != "0" -%>
     - "--mem"
-    - "<%= memtask %>"
+    - "<%= memtask %>G"
+    <%- end -%>
+    <%- if nodelist != "" -%>
+    - "-w"
+    - "<%= nodelist %>"
     <%- end -%>
   <%- end -%>
 

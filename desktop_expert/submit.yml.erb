@@ -23,13 +23,12 @@ script:
     - "--gres=gpu:<%= gpu_type %>:<%= gpu_count %>"
        <%- end -%>
     <%- end -%>
-    <%- if memtask != "default" -%>
+    <%- if memtask != "" and memtask != "0" -%>
     - "--mem"
-    - "<%= memtask %>"
+    - "<%= memtask %>G"
     <%- end -%>
-    <%- if nodelist != nil -%>
+    <%- if nodelist != "" -%>
     - "-w"
     - "<%= nodelist %>"
     <%- end -%>
   <%- end -%>
-

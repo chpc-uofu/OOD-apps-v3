@@ -41,27 +41,12 @@ attributes:
 <%= line %>
 <% end %>    
 
-<% IO.foreach(template_root+"job_params_v3") do |line| %>
+<% IO.foreach(template_root+"job_params_v32") do |line| %>
 <%= line %>
 <% end %>    
 
-  num_nodes:
-    widget: number_field
-    label: "Number of nodes"
-    min: 1
-    step: 1
-    value: 1
-    help: "Number of nodes to distribute the tasks over, leave at 1 to use a single node. Only CFX currently supports multiple nodes."
-
 form:
   - version
-  - cluster
-  - custom_accpart
-  - num_cores
-  - num_nodes
-  - bc_num_hours
-  - memtask
-  - gpu_type
-  - gpu_count
-  - bc_vnc_resolution
-  - bc_email_on_started
+<% IO.foreach(template_root+"form_params_gpu_multinode") do |line| %>
+<%= line %>
+<% end %>    

@@ -7,6 +7,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco2',
@@ -17,6 +19,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco3',
@@ -27,6 +31,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco4',
@@ -37,6 +43,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco5',
@@ -47,6 +55,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco6',
@@ -57,6 +67,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco7',
@@ -67,6 +79,8 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]
       - [
           'frisco8',
@@ -77,4 +91,6 @@
           data-hide-bc-num-hours: true,
           data-hide-custom-accpart: true,
           data-hide-bc-email-on-started: true,
+          data-hide-nodelist: true,
+          data-hide-advanced-options: true,
         ]

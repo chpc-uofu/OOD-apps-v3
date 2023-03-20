@@ -31,26 +31,13 @@ attributes:
 <%= line %>
 <% end %>    
 
-<% IO.foreach(template_root+"job_params_v3") do |line| %>
+<% IO.foreach(template_root+"job_params_v32") do |line| %>
 <%= line %>
 <% end %>    
 
-  nodelist:
-    widget: text_area 
-    label: Nodelist
-    help: "Enter a list of nodes to run on (will be passed to the sbatch -nodelist option). Leave empty if you want to include all available nodes."
-
 form:
-  - cluster
-  - custom_accpart
   - bc_vnc_idle
   - desktop
-  - bc_num_hours
-  - num_cores
-  - node_type
-  - memtask
-  - gpu_type
-  - gpu_count
-  - nodelist
-  - bc_vnc_resolution
-  - bc_email_on_started
+<% IO.foreach(template_root+"form_params_gpu") do |line| %>
+<%= line %>
+<% end %>    

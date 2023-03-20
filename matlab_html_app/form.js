@@ -1,108 +1,128 @@
+ type="text/javascript"
+ //# sourceURL=form.js
+
 'use strict'
 
-/**
- * Clamp between two numbers
- *
- * @param      {number}  min     The minimum
- * @param      {number}  max     The maximum
- * @param      {number}  val     The value to clamp
+/*
+ * Function to handle partition limitations
  */
-function clamp(min, max, val) {
-  return Math.min(max, Math.max(min, val));
+
+function partition_limits(selected_queue) {
+
+	// Get Form Fields
+	var accpart = $('#batch_connect_session_context_custom_accpart');
+	var time = $('#batch_connect_session_context_bc_num_hours');
+	var cpus = $('#batch_connect_session_context_num_cores');
+	var mem = $('#batch_connect_session_context_memtask');
+
+	// Get Default Max Values
+	var max_time = time.attr("max");
+	var max_cpu = cpus.attr("max");
+	var max_mem = mem.attr("max");
+
+	if (selected_queue === "notchpeak-shared-short:notchpeak-shared-short") {
+
+		max_time = 8;
+		max_cpu = 16;
+		max_mem = 128;
+	}
+	else if (selected_queue.includes("smithp-ash")) {
+
+		max_time = 168;
+		max_cpu = 24;
+		max_mem = 490;
+	}
+	else if (selected_queue.includes("lp") ) {
+
+		max_time = 336;
+		max_cpu = 20;
+		max_mem = 128;
+	}
+	else if (selected_queue.includes("kp") ) {
+
+		max_time = 336;
+		max_cpu = 28;
+		max_mem = 1000;
+	}
+	else if (selected_queue.includes("np") ) {
+
+		max_time = 336;
+		max_cpu = 64;
+		max_mem = 1000;
+	}
+	else {
+
+		max_time = 72;
+		max_cpu = 64;
+		max_mem = 764;
+	}
+
+	// Handle Max Time Changes
+	if (time.val() > max_time) {
+		time.val(max_time)
+	}
+	time.attr({ "max": max_time });
+
+	// Handle Max CPU Changes
+	if (cpus.val() > max_cpu) {
+		cpus.val(max_cpu)
+	}
+	cpus.attr({ "max": max_cpu });
+
+	// Handle Max Mem Changes
+	if (mem.val() > max_mem) {
+		mem.val(max_mem)
+	}
+	mem.attr({ "max": max_mem });
 }
 
-/**
- * Fix num cores, allowing blanks to remain
- */
-function fix_num_cores() {
-  let node_type_input = $('#batch_connect_session_context_node_type');
-  let num_cores_input = $('#batch_connect_session_context_num_cores');
+function toggle_advanced_options() {
+  let num_nodes = $('#batch_connect_session_context_num_nodes');
+  let memtask = $('#batch_connect_session_context_memtask');
+  let gpu_type = $('#batch_connect_session_context_gpu_type');
+  let gpu_count = $('#batch_connect_session_context_gpu_count');
+  let nodelist = $('#batch_connect_session_context_nodelist');
+  let advanced_options = document.getElementById("batch_connect_session_context_advanced_options");
 
-  if(num_cores_input.val() === '') {
-    return;
-  }
-
-  set_ppn_by_node_type(node_type_input, num_cores_input);
-}
-
-/**
- * Sets the ppn by node type.
- *
- * @param      {element}  node_type_input  The node type input
- * @param      {element}  num_cores_input  The number cores input
- */
-function set_ppn_by_node_type(node_type_input, num_cores_input) {
-  let data = node_type_input.find(':selected').data();
-
-  num_cores_input.attr('max', data.maxPpn);
-  num_cores_input.attr('min', data.minPpn);
-
-  // Clamp value between min and max
-  num_cores_input.val(
-    clamp(data.minPpn, data.maxPpn, num_cores_input.val())
-  );
-}
-
-/**
- * Toggle the visibilty of a form group
- *
- * @param      {string}    form_id  The form identifier
- * @param      {boolean}   show     Whether to show or hide
- */
-function toggle_visibilty_of_form_group(form_id, show) {
-  let form_element = $(form_id);
-  let parent = form_element.parent();
-
-  if(show) {
-    parent.show();
+  if(advanced_options.checked === true)  {
+      num_nodes.parent().show();
+      memtask.parent().show();
+      gpu_type.parent().show();
+      if (gpu_type[0].value === "none") {
+        gpu_count.parent().hide(); 
+      } else {
+        gpu_count.parent().show(); 
+      }
+      nodelist.parent().show();
   } else {
-    form_element.val('');
-    parent.hide();
+      num_nodes.parent().hide();
+      memtask.parent().hide();
+      gpu_type.parent().hide();
+      gpu_count.parent().hide();
+      nodelist.parent().hide();
   }
 }
 
-/**
- * Toggle the visibilty of the CUDA select
- *
- * Looking for the value of data-can-show-cuda
- */
-function toggle_cuda_version_visibility() {
-  let node_type_input = $('#batch_connect_session_context_node_type');
-
-  // Allow for cuda_version control not existing
-  if ( ! ($('#batch_connect_session_context_cuda_version').length > 0) ) {
-    return;
-  }
-
-  toggle_visibilty_of_form_group(
-    '#batch_connect_session_context_cuda_version',
-    node_type_input.find(':selected').data('can-show-cuda')
-  );
-}
-
-/**
- * Sets the change handler for the node_type select.
- */
-function set_node_type_change_handler() {
-  let node_type_input = $('#batch_connect_session_context_node_type');
-  node_type_input.change(node_type_change_hander);
-}
-
-/**
- * Update UI when node_type changes
- */
-function node_type_change_hander() {
-  fix_num_cores();
-  toggle_cuda_version_visibility();
-}
-
-/**
- * Main
+/*
+ * Invoke the functions when the DOM is ready.
  */
 
-// Set controls to align with the values of the last session context
-fix_num_cores();
-toggle_cuda_version_visibility();
+$(document).ready(function () {
 
-// Install event handlers
-set_node_type_change_handler();
+	// Set Default Partition
+	// $('select').find('option[value="notchpeak-shared-short:notchpeak-shared-short"]').attr('selected', 'selected');
+
+	// Handle Partition Specific Settings
+	let queue = $('#batch_connect_session_context_custom_accpart');
+	partition_limits(queue[0].value);
+	queue.change(function () {
+		partition_limits(queue[0].value);
+	})
+        // toggle advanced options on form refresh
+let install_trigger = $('#batch_connect_session_context_advanced_options');
+install_trigger.change(toggle_advanced_options);
+const form = document.getElementById("new_batch_connect_session_context");
+
+        toggle_advanced_options();
+});
+

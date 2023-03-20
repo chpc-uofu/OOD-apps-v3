@@ -76,33 +76,6 @@ function partition_limits(selected_queue) {
 	mem.attr({ "max": max_mem });
 }
 
-function toggle_advanced_options() {
-  let num_nodes = $('#batch_connect_session_context_num_nodes');
-  let memtask = $('#batch_connect_session_context_memtask');
-  let gpu_type = $('#batch_connect_session_context_gpu_type');
-  let gpu_count = $('#batch_connect_session_context_gpu_count');
-  let nodelist = $('#batch_connect_session_context_nodelist');
-  let advanced_options = document.getElementById("batch_connect_session_context_advanced_options");
-
-  if(advanced_options.checked === true)  {
-      num_nodes.parent().show();
-      memtask.parent().show();
-      gpu_type.parent().show();
-      if (gpu_type[0].value === "none") {
-        gpu_count.parent().hide(); 
-      } else {
-        gpu_count.parent().show(); 
-      }
-      nodelist.parent().show();
-  } else {
-      num_nodes.parent().hide();
-      memtask.parent().hide();
-      gpu_type.parent().hide();
-      gpu_count.parent().hide();
-      nodelist.parent().hide();
-  }
-}
-
 /*
  * Invoke the functions when the DOM is ready.
  */
@@ -118,11 +91,5 @@ $(document).ready(function () {
 	queue.change(function () {
 		partition_limits(queue[0].value);
 	})
-        // toggle advanced options on form refresh
-let install_trigger = $('#batch_connect_session_context_advanced_options');
-install_trigger.change(toggle_advanced_options);
-const form = document.getElementById("new_batch_connect_session_context");
-
-        toggle_advanced_options();
 });
 

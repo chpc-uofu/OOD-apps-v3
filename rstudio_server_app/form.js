@@ -1,61 +1,128 @@
+ type="text/javascript"
+ //# sourceURL=form.js
+
 'use strict'
 
-/**
- * Fix num cores, allowing blanks to remain
+/*
+ * Function to handle partition limitations
  */
-function fix_num_cores() {
-  let node_type_input = $('#batch_connect_session_context_node_type');
-  let node_type = node_type_input.val();
-  let num_cores_input = $('#num_cores');
 
-  if(num_cores_input.val() === '') {
-    return;
-  }
-  
-  if(node_type === 'hugemem') {
-    set_ppn_owens_hugemem(num_cores_input);
+function partition_limits(selected_queue) {
+
+	// Get Form Fields
+	var accpart = $('#batch_connect_session_context_custom_accpart');
+	var time = $('#batch_connect_session_context_bc_num_hours');
+	var cpus = $('#batch_connect_session_context_num_cores');
+	var mem = $('#batch_connect_session_context_memtask');
+
+	// Get Default Max Values
+	var max_time = time.attr("max");
+	var max_cpu = cpus.attr("max");
+	var max_mem = mem.attr("max");
+
+	if (selected_queue === "notchpeak-shared-short:notchpeak-shared-short") {
+
+		max_time = 8;
+		max_cpu = 16;
+		max_mem = 128;
+	}
+	else if (selected_queue.includes("smithp-ash")) {
+
+		max_time = 168;
+		max_cpu = 24;
+		max_mem = 490;
+	}
+	else if (selected_queue.includes("lp") ) {
+
+		max_time = 336;
+		max_cpu = 20;
+		max_mem = 128;
+	}
+	else if (selected_queue.includes("kp") ) {
+
+		max_time = 336;
+		max_cpu = 28;
+		max_mem = 1000;
+	}
+	else if (selected_queue.includes("np") ) {
+
+		max_time = 336;
+		max_cpu = 64;
+		max_mem = 1000;
+	}
+	else {
+
+		max_time = 72;
+		max_cpu = 64;
+		max_mem = 764;
+	}
+
+	// Handle Max Time Changes
+	if (time.val() > max_time) {
+		time.val(max_time)
+	}
+	time.attr({ "max": max_time });
+
+	// Handle Max CPU Changes
+	if (cpus.val() > max_cpu) {
+		cpus.val(max_cpu)
+	}
+	cpus.attr({ "max": max_cpu });
+
+	// Handle Max Mem Changes
+	if (mem.val() > max_mem) {
+		mem.val(max_mem)
+	}
+	mem.attr({ "max": max_mem });
+}
+
+function toggle_advanced_options() {
+  let num_nodes = $('#batch_connect_session_context_num_nodes');
+  let memtask = $('#batch_connect_session_context_memtask');
+  let gpu_type = $('#batch_connect_session_context_gpu_type');
+  let gpu_count = $('#batch_connect_session_context_gpu_count');
+  let nodelist = $('#batch_connect_session_context_nodelist');
+  let advanced_options = document.getElementById("batch_connect_session_context_advanced_options");
+
+  if(advanced_options.checked === true)  {
+      num_nodes.parent().show();
+      memtask.parent().show();
+      gpu_type.parent().show();
+      if (gpu_type[0].value === "none") {
+        gpu_count.parent().hide(); 
+      } else {
+        gpu_count.parent().show(); 
+      }
+      nodelist.parent().show();
   } else {
-    set_ppn_owens_regular(num_cores_input);
+      num_nodes.parent().hide();
+      memtask.parent().hide();
+      gpu_type.parent().hide();
+      gpu_count.parent().hide();
+      nodelist.parent().hide();
   }
 }
 
-/**
- * Sets the PPN limits available for Owens hugemem nodes.
- * 
- * hugemem reservations are always assigned the full node
- *
- * @param      {element}  num_cores_input  The input for num_cores
+/*
+ * Invoke the functions when the DOM is ready.
  */
-function set_ppn_owens_hugemem(num_cores_input) {
-  const NUM_CORES = 48;
-  num_cores_input.attr('max', NUM_CORES);
-  num_cores_input.attr('min', NUM_CORES);
-  num_cores_input.val(NUM_CORES);
-}
 
-/**
- * Sets the PPN limits available for non hugemem Owens nodes.
- *
- * @param      {element}  num_cores_input  The input for num_cores
- */
-function set_ppn_owens_regular(num_cores_input) {
-  const NUM_CORES = 28;
-  num_cores_input.attr('max', NUM_CORES);
-  num_cores_input.attr('min', 0);
-  num_cores_input.val(Math.min(NUM_CORES, num_cores_input.val()));
-}
+$(document).ready(function () {
 
+	// Set Default Partition
+	// $('select').find('option[value="notchpeak-shared-short:notchpeak-shared-short"]').attr('selected', 'selected');
 
-/**
- * Change the maximum number of cores selected.
- */
-function set_node_type_change_handler() {
-  let node_type_input = $('#batch_connect_session_context_node_type');
-  node_type_input.change(node_type_input, fix_num_cores);
-}
+	// Handle Partition Specific Settings
+	let queue = $('#batch_connect_session_context_custom_accpart');
+	partition_limits(queue[0].value);
+	queue.change(function () {
+		partition_limits(queue[0].value);
+	})
+        // toggle advanced options on form refresh
+let install_trigger = $('#batch_connect_session_context_advanced_options');
+install_trigger.change(toggle_advanced_options);
+const form = document.getElementById("new_batch_connect_session_context");
 
-$(document).ready(function() {
-  // Set the max value to be what was set in the last session
-  fix_num_cores();
-  set_node_type_change_handler();
+        toggle_advanced_options();
 });
+

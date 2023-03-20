@@ -17,10 +17,18 @@ script:
     - "-n"
     - "<%= num_cores %>"
     <%- if gpu_type != "none" -%>
+       <%- if gpu_type == "any" -%>
+    - "--gres=gpu:<%= gpu_count %>"
+       <%- else -%>
     - "--gres=gpu:<%= gpu_type %>:<%= gpu_count %>"
+       <%- end -%>
     <%- end -%>
-    <%- if memtask != "default" -%>
+    <%- if memtask != "" and memtask != "0" -%>
     - "--mem"
-    - "<%= memtask %>"
+    - "<%= memtask %>G"
+    <%- end -%>
+    <%- if nodelist != "" -%>
+    - "-w"
+    - "<%= nodelist %>"
     <%- end -%>
   <%- end -%>

@@ -20,6 +20,9 @@ attributes:
       - [  "CHPC Python 3.10.3", "python/3.10.3",
            data-hide-custom-environment: true
         ]
+      - [ "CHPC Deep Learning 2023.3", "deeplearning/2023.3",
+           data-hide-custom-environment: true
+        ]
       - [ "CHPC Deep Learning 2022.1", "deeplearning/2022.1",
            data-hide-custom-environment: true
         ]
@@ -53,7 +56,7 @@ attributes:
 <%= line %>
 <% end %>    
 
-<% IO.foreach(template_root+"job_params_v3") do |line| %>
+<% IO.foreach(template_root+"job_params_v32") do |line| %>
 <%= line %>
 <% end %>    
 
@@ -61,11 +64,6 @@ form:
   - interface
   - python
   - custom_environment
-  - cluster
-  - custom_accpart
-  - num_cores
-  - bc_num_hours
-  - memtask
-  - gpu_type
-  - gpu_count
-  - bc_email_on_started
+<% IO.foreach(template_root+"form_params_gpu") do |line| %>
+<%= line %>
+<% end %>    
