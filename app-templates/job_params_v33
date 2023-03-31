@@ -1,0 +1,181 @@
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores (per node)"
+    value: 1
+    help: "Maximum number of CPU cores on notchpeak-shared-short is 16, see [cluster help pages](https://www.chpc.utah.edu/resources/HPC_Clusters.php) for other cluster's CPU counts per node."
+    min: 1
+    step: 1
+  bc_num_hours:
+    value: 1
+    min: 1
+    step: 1
+    help: "Maximum wall time on notchpeak-shared-short is 8 hours, general nodes 72 hours, owner nodes 14 days."
+  bc_email_on_started:
+    widget: "check_box"
+    label: "I would like to receive an email when the session starts"
+    help: "If you do not receive the email, check your [Profile](https://www.chpc.utah.edu/role/user/edit_profile.php) for correct address."
+  bc_vnc_resolution:
+    required: true
+  advanced_options:
+    widget: "check_box"
+    label: "Advanced options (memory, GPU, nodes)"
+    help: Check the checkboxes to see the entry options. All advanced options need to be at their defaults for them to hide.
+    value: "0" 
+  nodes_checkbox:
+    widget: "check_box"
+    label: "Number of nodes"
+    value: "0"
+  num_nodes:
+    widget: "number_field"
+    skip_label: true
+    value: 1 
+    min: 1
+    max: 16
+    step: 1
+    help: |
+      - Default 1. Use more than one only if you know how to run the program across multiple nodes.
+  memtask_checkbox:
+    widget: "check_box"
+    label: "Memory per job in GB"
+    value: "0"
+  memtask:
+    widget: "number_field"
+    value: 0 
+    min: 0
+    max: 64
+    step: 1
+    skip_label: true
+    help: |
+      - **0** - Default, 2 or 4 GB per task, depending on partition.
+      - **128** - Use 128 GB, this is the maximum on notchpeak-shared-short.
+  gpu_checkbox:
+    widget: "check_box"
+    label: "GPU type"
+    value: "0"
+  gpu_type:
+    skip_label: true
+    widget: select
+    value: "none" 
+    options:
+      - [
+           'none',
+           data-hide-gpu-count: true
+        ]
+      - [
+           'any','any',
+           data-option-for-cluster-ash: false,
+        ]
+      - [
+           'Nvidia GTX 1080 Ti, SP, general, owner','1080ti',
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia GTX Titan X, SP, owner','titanx',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-notchpeak: false,
+           data-option-for-cluster-lonepeak: false
+        ]
+      - [
+           'Nvidia P100, DP, owner','p100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-notchpeak: false,
+           data-option-for-cluster-lonepeak: false
+        ]
+      - [
+           'Nvidia V100, DP, general, owner','v100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia P40, SP, general','p40',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia A40, SP, owner','a40',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia A100, DP, general, owner','a100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia T4, SP, general, owner','t4',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia V, SP, owner','titanv',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia RTX 2080 Ti, SP, general, owner','2080ti',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia RTX 3090, SP, general, owner','3090',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'Nvidia RTX A6000, SP, owner','a6000',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'AMD MI100, SP, evaluation','mi100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+    help: |
+      - Default **none** if no GPU.
+      - **any** available GPU for the given cluster and partition.
+      - SP - Single Precision, DP - Double Precision.
+      - Choose the correct account and partition for the selected GPUs. General nodes use __*cluster*-gpu:*cluster*-gpu__ and owner nodes **owner-gpu-guest:*cluster*-gpu-guest**.
+      - See [GPU node list](https://chpc.utah.edu/documentation/guides/gpus-accelerators.php#gnl) for details on GPU features and counts per node.
+  gpu_count:
+    label: "GPU count"
+    widget: "number_field"
+    value: 1
+    min: 1
+    max: 8
+    step: 1
+  nodelist_checkbox:
+    widget: "check_box"
+    label: "Nodelist"
+    value: "0"
+  nodelist:
+    widget: text_area
+    skip_label: true
+    help: "Enter a list of nodes to run on (will be passed to the sbatch --nodelist option). Default empty if you want to include all available nodes."
+  add_env_checkbox:
+    widget: "check_box"
+    label: "Additional environment"
+    value: "0"
+  additional_environment:
+    widget: text_area
+    skip_label: true
+    help: "Enter extra environment parameters such as module loads to be present in the app environment. Only works for CHPC installed apps, not for apps from containers (R Bioconductor/Geospatial, Python Deep Learning). Default empty."
+  constraint_checkbox:
+    widget: "check_box"
+    label: "Constraints (node owner, CPU architecture, memory)"
+    value: "0"
+  constraint:
+    widget: text_area
+    skip_label: true
+    help: "Node owner is useful for targeting owner-guest nodes to [lower preemption chances](https://www.chpc.utah.edu/usage/constraints). CPU architecture targets specific CPUs (help page to be made). Default empty."
+

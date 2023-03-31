@@ -8,6 +8,11 @@ if [ $OSREL == "Rocky" ]; then
 else
   R_MOD    = "module load R/3.6.1"
 fi
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
+
 <%-
   # Helper
   cache_root = Pathname.new("${CACHE_DIR}")
@@ -132,6 +137,10 @@ if [ $OSREL == "Rocky" ]; then
 else
   module load R/3.6.1
 fi
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 # Output debug info
 module list

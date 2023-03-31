@@ -11,6 +11,11 @@ cd "${HOME}"
 <%- else -%>
   module load <%= context.python %>
 <%- end -%>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
+
 # Workaround for directory permission error
 #unset XDG_RUNTIME_DIR
 #export XDG_RUNTIME_DIR=""

@@ -49,6 +49,10 @@ set -x
 
 # Load the required environment
 module load intel <%= context.version %>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 # Launch COMSOL Multiphysics
 unset SLURM_GTIDS

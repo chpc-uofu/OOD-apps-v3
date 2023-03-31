@@ -145,4 +145,11 @@
     widget: text_area
     label: Nodelist
     help: "Enter a list of nodes to run on (will be passed to the sbatch --nodelist option). Leave empty if you want to include all available nodes."
+  add_env_checkbox:
+    widget: "check_box"
+    label: "Additional environment"
+    value: "0"
+  additional_environment:
+    widget: text_area
+    help: "Enter extra environment parameters such as module loads to be present in the app environment. Only works for CHPC installed apps, not for apps from containers (R Bioconductor/Geospatial, Python Deep Learning)."
 

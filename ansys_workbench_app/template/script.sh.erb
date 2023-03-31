@@ -41,6 +41,10 @@ cd "${HOME}"
 #module load intel # for Intel MPI
 #module load gcc/4.8.5 impi # for Intel MPI
 module load <%= context.version %>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 # Another ANSYS job with the same job name (file) is already running in this
 # directory or the file.lock file has not been deleted from an abnormally

@@ -31,5 +31,9 @@ script:
     - "-w"
     - "<%= nodelist %>"
     <%- end -%>
+    <%- if constraint != "" -%>
+    - "-C"
+    - "<%= constraint %>"
+    <%- end -%>
   <%- end -%>
 

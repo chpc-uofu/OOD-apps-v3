@@ -12,6 +12,9 @@ module purge
   RSPATH="/uufs/chpc.utah.edu/sys/installdir/rstudio-server/2021.09.2/bin/"
   # let the RStudio session use all the threads it can get (we set OMP_NUM_THREADS=1 in some R modules)
   unset OMP_NUM_THREADS
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 # RStudio Server from the containers
 <%- else -%>
   module use /uufs/chpc.utah.edu/sys/installdir/rstudio-singularity/modulefiles
@@ -34,6 +37,9 @@ umask 077
 sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   #!/usr/bin/env bash
 
+  # source Lmod if it's not already sourced - starts in clean environment
+  source /etc/profile.d/chpc.sh
+
   export TZ="America/Denver"
 
   # Log all output from this script
@@ -41,8 +47,17 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   exec &>>"\${RSESSION_LOG_FILE}"
   #echo R_LIBS_SITE $R_LIBS_SITE
   #env
+  # load all the modules that are set in the Environment section
+<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+  module load R/<%= context.version %>
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
+<%- end -%>
 
   echo "Launching rsession..."
+  # Note that the rsession brings in limited environment, it imports PATH, LD_LIBRARY_PATH, MANPATH, ...
+  # but not other env. vars. that Lmod needs so "module list" is empty
   exec ${RSPATH}rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
 EOL
 )

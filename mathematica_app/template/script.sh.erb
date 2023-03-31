@@ -5,7 +5,7 @@ module purge
 
 # Work around spam message about dconf write permissions
 #export XDG_RUNTIME_DIR="/tmp/${UID}"
-unsetenv XDG_RUNTIME_DIR
+unset XDG_RUNTIME_DIR
 
 # Set working directory to home directory
 cd "${HOME}"
@@ -35,7 +35,12 @@ cd "${HOME}"
 # Load the required environment
 module load <%= context.version %>
 
-# Launch MATLAB
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
+
+# Launch program
 module list
 set -x
 mathematica -nosplash

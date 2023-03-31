@@ -13,7 +13,7 @@ unset SLURM_GTIDS
 
 # Work around spam message about dconf write permissions
 #export XDG_RUNTIME_DIR="/tmp/${UID}"
-unsetenv XDG_RUNTIME_DIR
+unset XDG_RUNTIME_DIR
 =======
 
 # Set working directory to home directory
@@ -42,6 +42,10 @@ cd "${HOME}"
 # Load the required environment
 module load intel # for Intel MPI
 module load <%= context.version %>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 # Another ANSYS job with the same job name (file) is already running in this
 # directory or the file.lock file has not been deleted from an abnormally

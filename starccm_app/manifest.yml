@@ -1,0 +1,19 @@
+---
+name: StarCCM+
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [STARCCM+] GUI on a [HPC cluster] or on a [Frisco node]. You will be able
+  to interact with the STARCCM+ GUI through a VNC session.
+
+  [GPU specification] is optional for the partitions that have them.
+
+  For parallel processing, choose `Parallel on Local Host` and set number of `Compute Processes` equal to `number of cores`.
+
+  NOTE: Due to licensing, STARCCM+ is only available to Utah State University affiliates.
+
+  [STARCCM+]: https://www.plm.automation.siemens.com/global/en/products/simcenter/STAR-CCM.html
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview

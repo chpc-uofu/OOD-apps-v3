@@ -34,8 +34,9 @@ export PASSWORD="$password"
 # Print compute node.
 echo "$(date): Running on compute node ${compute_node}:$port"
 
-# VSCode complains that system git is too old.
-module load git
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 echo ""
 

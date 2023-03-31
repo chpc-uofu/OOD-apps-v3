@@ -42,6 +42,10 @@ elif [ <%= context.version %> = "relion/4.0.0-gpu" ]; then
 fi
 
 #module load <%= context.version %>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 # Launch COMSOL Multiphysics
 module list

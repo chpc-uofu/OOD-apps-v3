@@ -29,6 +29,10 @@ cd "${HOME}"
 
 # Load the required environment
 module load <%= context.version %>
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
 
 module list
 set -x
