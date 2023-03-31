@@ -8,11 +8,10 @@ Version 3.3
   - advanced options is checked if any advanced option is selected
   - added nodelist (sbatch -w), additional environment and constraints (sbatch -C)
 - unified form.js and templated submit.yml.erb for 3 types of apps
- - form_params_gpu - Codeserver, CSD, Desktop, IDL, Jupyter, Mathematica, Matlab, Matlab Web, RStudio, SAS,
-Shiny, StarCCM+, Stata
- - form_params_multinode - Comsol, Lumerical
- - form_params_gpu_multinode - Abaqus, AnsysWB, AnsysEDT, Relion
- - no form_params - just Friscos - Coot, IDV, Meshroom, Paraview, VMD
+  - form_params_gpu - Codeserver, CSD, Desktop, IDL, Jupyter, Mathematica, Matlab, Matlab Web, RStudio, SAS, Shiny, StarCCM+, Stata
+  - form_params_multinode - Comsol, Lumerical
+  - form_params_gpu_multinode - Abaqus, AnsysWB, AnsysEDT, Relion
+  - no form_params - just Friscos - Coot, IDV, Meshroom, Paraview, VMD
 
 
 Version 3.2
