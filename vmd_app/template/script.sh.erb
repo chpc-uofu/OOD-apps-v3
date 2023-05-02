@@ -38,5 +38,14 @@ module list
 set -x
 #export VMDOPTIXDEVICEMASK=0x${CUDA_VISIBLE_DEVICES}
 export VMDOPTIXDEVICEMASK=0x1
-xfce4-terminal -e "vglrun -c proxy vmd" -T "VMD Terminal" --disable-server
+<%- if /frisco/.match(context.cluster) == nil -%>
+#vmd
+xfce4-terminal -e "vmd" -T "VMD Terminal" --disable-server
+<%- else -%>
+xfce4-terminal -e "vglrun -d :0.0 -c proxy vmd" -T "VMD Terminal" --disable-server
+#vglrun -d :0.0  -c proxy vmd
+<%- end -%>
+
+# This crashes on Rocky 8
+#xfce4-terminal -e "vglrun -c proxy vmd" -T "VMD Terminal" --disable-server
 #xfce4-terminal -e "vmd" -T "VMD Terminal" --disable-server

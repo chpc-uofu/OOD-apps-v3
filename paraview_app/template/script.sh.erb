@@ -42,5 +42,6 @@ set -x
 echo $DISPLAY
 #paraview #--mesa
 vglrun -c proxy paraview 
+#xfce4-terminal -e "vglrun -d :0.0 -c proxy paraview" -T "Paraview Terminal" --disable-server
 #paraview -mesa
 #vglrun -c proxy paraview -mesa

@@ -15,15 +15,32 @@ attributes:
     help: "This defines the version of <%= app_name %> you want to load."
     options:
       - [ "1.9.3", "vmd/1.9.3" ]
+      - [ "1.9.4 Alpha", "vmd/1.9.4a" ]
   cluster:
-    widget: "select"
+    widget: select
     options:
-      <% IO.foreach(template_root+"interactives") do |line| %>
-      - [ "<%= line.to_s.strip %>" ]
-      <% end %>    
-    help: |
-      Select the Frisco node to create this session on.<br>
+      <%- CustomQueues.clusters.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    value: "notchpeak"
+    cacheable: true
+    help: "NOTE: Currently VMD does not work on Friscos. If you need GL acceleration, contact helpdesk@chpc.utah.edu"
+  custom_accpart:
+    widget: select
+    options:
+      <%- CustomAccPart.accpart.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+<% IO.foreach(template_root+"accpart-help") do |line| %>
+<%= line %>
+<% end %>    
+
+<% IO.foreach(template_root+"job_params_v33") do |line| %>
+<%= line %>
+<% end %>   
 
 form:
   - version
-  - cluster
+<% IO.foreach(template_root+"form_params_gpu") do |line| %>
+<%= line %>
+<% end %>   

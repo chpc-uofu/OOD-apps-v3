@@ -7,10 +7,10 @@
 batch_connect:
   template: vnc
 script:
+  <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
   accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
   queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
   email: <%= emailaddr %>
-  <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
   native:
     - "-N"
     - "1"

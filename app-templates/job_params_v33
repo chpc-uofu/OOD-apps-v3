@@ -177,5 +177,5 @@
   constraint:
     widget: text_area
     skip_label: true
-    help: "Node owner is useful for targeting owner-guest nodes to [lower preemption chances](https://www.chpc.utah.edu/usage/constraints). CPU architecture targets specific CPUs (help page to be made). Default empty."
+    help: "Node owner is useful for targeting owner-guest nodes to [lower preemption chances](https://www.chpc.utah.edu/usage/constraints). CPU architecture targets [specific CPUs](https://www.chpc.utah.edu/usage/constraints/#cpu). Default empty."
 
