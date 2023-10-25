@@ -43,7 +43,9 @@ set -x
 <%- if /frisco/.match(context.cluster) == nil -%>
   runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
 <%- else -%>
-  vglrun -d :0.0 -c proxy runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
+#  vglrun -d :0.0 -c proxy runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
+  vglrun -d $DISPLAY -c proxy runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
+#  vglrun -c proxy runIDV $idv_opt |& tee "<%= session.staged_root.join("idv.log") %>"
 <%- end -%>
 IDV_EXIT_CODE=${PIPESTATUS[0]}
 { set +x; } 2>/dev/null

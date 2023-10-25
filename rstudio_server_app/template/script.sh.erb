@@ -30,6 +30,10 @@ WORKDIR=/scratch/local/${USER}/${SLURM_JOB_ID}
 # PAM auth helper used by RStudio
 export RSTUDIO_AUTH="${PWD}/bin/auth"
 
+# bring SLURM environment into the R session
+env |grep SLURM > ${PWD}/slurmenv.sh
+sed -i 's/SLURM/export SLURM/g' ${PWD}/slurmenv.sh
+
 # Generate an `rsession` wrapper script
 export RSESSION_WRAPPER_FILE="${PWD}/rsession.sh"
 (
@@ -39,11 +43,14 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
 
   # source Lmod if it's not already sourced - starts in clean environment
   source /etc/profile.d/chpc.sh
+# bring SLURM environment into the R session
+  source ${PWD}/slurmenv.sh
 
   export TZ="America/Denver"
 
   # Log all output from this script
   export RSESSION_LOG_FILE="${PWD}/rsession.log"
+  export RSTUDIO_DATA_HOME=$WORKDIR
   exec &>>"\${RSESSION_LOG_FILE}"
   #echo R_LIBS_SITE $R_LIBS_SITE
   #env
@@ -65,11 +72,24 @@ chmod 700 "${RSESSION_WRAPPER_FILE}"
 
 # rsession launcher complains about not knowing the auth-* options despite being 
 # documented in https://docs.rstudio.com/ide/server-pro/rstudio-server-configuration.html#rserver.conf
+# workspace options https://docs.posit.co/ide/server-pro/rstudio_pro_sessions/workspace_management.html
+#if [[ $string =~ "-" ]]; then
+#  WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk -F'[-:]' '{ print $1*24*60 + $2*60 + $3 }'`
+#else
+#  WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk -F'[:]' '{ print $1*60 + $2 }'`
+#fi
+WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk '{split($1, tokens, "-"); if (length(tokens) == 1) { days=0; time=tokens[1]; } else { days=tokens[1]; time=tokens[2]; } split(time, times, ":"); print 60*(times[1]+24*days) + times[2] }'`
+
 cat >${WORKDIR}/rserver.conf <<END
 # Server Configuration File
 # auth-timeout-minutes=0
 # auth-stay-signed-in-days=10
 # rsession-which-r=/usr/local/bin/R
+session-save-action-default=no
+session-timeout-minutes=$WALLMIN
+session-timeout-suspend=0
+session-rprofile-on-resume-default=0
+session-quit-child-processes-on-exit=1
 END
 
 # [Rstudio 1.4] database is required
@@ -107,6 +127,7 @@ find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -
 # Launch the RStudio Server
 echo "Starting up rserver..."
 set -x
+export RSTUDIO_DATA_HOME=$WORKDIR
 
 <%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   # sqlite is needed for the RS database      

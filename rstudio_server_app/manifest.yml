@@ -11,6 +11,7 @@ description: |
   [GPU specification] is optional for the partitions that have them.
 
   <b>NOTE:</b> For technical reasons only CHPC builds of the RStudio Server currently work on Frisco nodes. Please contact us for more information at helpdesk@chpc.utah.edu.
+  <b>NOTE:</b> Due to potential excessive file storage needs, the RStudio temporary session files are stored in the /scratch/local and removed after the job terminates. Make sure to save your work space to your home or group directory if you need to save the work space.
 
   [RStudio Server]: https://www.rstudio.com/products/rstudio-server/
   [R]: https://www.r-project.org/
