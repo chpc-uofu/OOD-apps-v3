@@ -1,0 +1,6 @@
+---
+name: Lonepeak Node Status
+description: |-
+  Detailed Node Status of the Lonepeak Cluster
+category: Clusters
+icon: fa://tachometer
