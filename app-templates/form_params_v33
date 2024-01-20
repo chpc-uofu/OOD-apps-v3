@@ -1,0 +1,17 @@
+  - cluster
+  - custom_accpart
+  - num_cores
+  - bc_num_hours
+  - advanced_options
+  - nodes_checkbox
+  - memtask_checkbox
+  - memtask
+  - nodelist_checkbox
+  - nodelist
+  - add_env_checkbox
+  - additional_environment
+  - constraint_checkbox
+  - constraint
+  - bc_vnc_resolution
+  - bc_email_on_started
+  - gpudata

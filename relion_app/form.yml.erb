@@ -1,10 +1,18 @@
 <%
 app_name = "RELION"
 template_root = "/var/www/ood/apps/templates/"
+gpu_data = {
+  gpu_partitions: CustomGPUPartitions.gpu_partitions,
+  gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
+}
 %>
 ---
 title: <%= app_name %>
 attributes:
+  gpudata:
+      widget: hidden_field
+      value: |
+        "<%= gpu_data.to_json %>"
   version:
     widget: select
     label: <%= app_name %> version
@@ -14,6 +22,7 @@ attributes:
       - [ "3.1.2-gpu",   "relion/3.1.2-gpu"   ]
       - [ "4.0.0-cpu",   "relion/4.0.0-cpu"   ]
       - [ "4.0.0-gpu",   "relion/4.0.0-gpu"   ]
+      - [ "5.0-beta-gpu",   "relion/5.0-beta-gpu"   ]
   cluster:
     widget: select
     options:
@@ -44,4 +53,4 @@ form:
   - version
 <% IO.foreach(template_root+"form_params_gpu_multinode") do |line| %>
 <%= line %>
-<% end %>   
+<% end %>

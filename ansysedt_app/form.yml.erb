@@ -5,6 +5,10 @@ template_root = "/var/www/ood/apps/templates/"
 #modulecmd = template_root + 'getmodules.sh' + " " + mod_name
 #modules = %x[ #{modulecmd}]
 modules = File.read(template_root+mod_name+".txt")
+gpu_data = {
+  gpu_partitions: CustomGPUPartitions.gpu_partitions,
+  gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
+}
 %>
 ---
 title: <%= app_name %>
@@ -19,7 +23,11 @@ attributes:
       <% unless line.to_s.strip == "" %>
       - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
       <% end %>    
-      <% end %>    
+      <% end %>
+  gpudata:
+      widget: hidden_field
+      value: |
+        "<%= gpu_data.to_json %>"
   cluster:
     widget: select
     options:
@@ -50,4 +58,4 @@ form:
   - version
 <% IO.foreach(template_root+"form_params_gpu_multinode") do |line| %>
 <%= line %>
-<% end %>   
+<% end %>

@@ -19,6 +19,10 @@ module purge
 <%- else -%>
   module use /uufs/chpc.utah.edu/sys/installdir/rstudio-singularity/modulefiles
   module load singularity rstudio_singularity/<%= context.version %>
+  # Rocker containers 4.3 and up don't put rsession to /usr/local/bin, it's in 
+  # /usr/lib/rstudio-server/bin with all other RSS binaries
+  # adding RSPATH definition in the module to be passed to this script
+
 <%- end -%>
 
 if [ ! -d "/scratch/local/${USER}" ]; then

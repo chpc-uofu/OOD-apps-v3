@@ -1,5 +1,9 @@
 <%
 template_root = "/var/www/ood/apps/templates/"
+gpu_data = {
+  gpu_partitions: CustomGPUPartitions.gpu_partitions,
+  gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
+}
 %>
 ---
 attributes:
@@ -9,6 +13,10 @@ attributes:
   bc_vnc_resolution:
     required: true
   node_type: null
+  gpudata:
+    widget: hidden_field
+    value: |
+      "<%= gpu_data.to_json %>"
   cluster:
     widget: select
     options:

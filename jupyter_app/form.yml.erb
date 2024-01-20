@@ -1,10 +1,18 @@
 <%
 app_name = "Jupyter"
 template_root = "/var/www/ood/apps/templates/"
+gpu_data = {
+  gpu_partitions: CustomGPUPartitions.gpu_partitions,
+  gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
+}
 %>
 ---
 title: <%= app_name %>
 attributes:
+  gpudata:
+    widget: hidden_field
+    value: |
+      "<%= gpu_data.to_json %>"
   interface:
     widget: select
     label: <%= app_name %> interface

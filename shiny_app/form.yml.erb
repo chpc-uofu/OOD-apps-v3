@@ -1,6 +1,10 @@
 <%
 app_name = "R Shiny app"
 template_root = "/var/www/ood/apps/templates/"
+gpu_data = {
+  gpu_partitions: CustomGPUPartitions.gpu_partitions,
+  gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
+}
 %>
 ---
 title: <%= app_name %>
@@ -11,6 +15,10 @@ attributes:
     help: "Enter the path to the Shiny app you want to run. App file in this directory has to be named either app.R or server.R."
     value: |
         ~/R/shiny/app
+  gpudata:
+      widget: hidden_field
+      value: |
+        "<%= gpu_data.to_json %>"
   version:
     widget: select
     label: "R version"
@@ -46,4 +54,4 @@ form:
   - version
 <% IO.foreach(template_root+"form_params_gpu") do |line| %>
 <%= line %>
-<% end %>   
+<% end %>

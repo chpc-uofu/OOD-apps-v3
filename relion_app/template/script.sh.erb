@@ -39,6 +39,9 @@ elif [ <%= context.version %> = "relion/4.0.0-cpu" ]; then
 elif [ <%= context.version %> = "relion/4.0.0-gpu" ]; then
   ml gcc/8.5.0  intel-oneapi-mpi/2021.1.1
   ml relion/4.0.0-gpu
+elif [ <%= context.version %> = "relion/5.0-beta-gpu" ]; then
+  ml gcc/8.5.0  intel-oneapi-mpi/2021.1.1
+  ml relion/5.0-beta-gpu
 fi
 
 #module load <%= context.version %>

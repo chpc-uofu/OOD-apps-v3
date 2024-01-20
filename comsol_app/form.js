@@ -1,1 +1,1 @@
-../app-templates/form_multinode.js
+../app-templates/form.js

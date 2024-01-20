@@ -59,6 +59,8 @@ unset SLURM_GTIDS
 # abaqus/2022 needs a specific MPI setting
 # for details: https://community.intel.com/t5/Intel-oneAPI-HPC-Toolkit/bug-mpiexec-segmentation-fault/m-p/1183364
 export I_MPI_HYDRA_TOPOLIB=ipl
+# as of SLURM 23.11.1, need to set this to run multi-node
+export I_MPI_HYDRA_BOOTSTRAP=slurm
 
 module list
 set -x

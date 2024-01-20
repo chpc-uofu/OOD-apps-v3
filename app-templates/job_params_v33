@@ -145,7 +145,7 @@
       - Default **none** if no GPU.
       - **any** available GPU for the given cluster and partition.
       - SP - Single Precision, DP - Double Precision.
-      - Choose the correct account and partition for the selected GPUs. General nodes use __*cluster*-gpu:*cluster*-gpu__ and owner nodes **owner-gpu-guest:*cluster*-gpu-guest**.
+      - Select a GPU account and partition to see available GPUs. General nodes use __*cluster*-gpu:*cluster*-gpu__ and owner nodes **owner-gpu-guest:*cluster*-gpu-guest**.
       - See [GPU node list](https://chpc.utah.edu/documentation/guides/gpus-accelerators.php#gnl) for details on GPU features and counts per node.
   gpu_count:
     label: "GPU count"

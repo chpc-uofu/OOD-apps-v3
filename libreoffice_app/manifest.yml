@@ -1,0 +1,12 @@
+---
+name: LibreOffice
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [LibreOffice] GUI on a [HPC cluster] or on a [Frisco node]. You will be able
+  to interact with the LibreOffice GUI through a VNC session.
+
+  [LibreOffice]: https://www.libreoffice.org/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php

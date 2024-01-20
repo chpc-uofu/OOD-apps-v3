@@ -1,1 +1,1 @@
-../app-templates/form_gpu.js
+../app-templates/form.js
