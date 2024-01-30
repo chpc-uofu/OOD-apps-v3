@@ -3,8 +3,11 @@ Repository of CHPC's Open OnDemand apps
 
 Version 3.4
 - Dynamic GPU pulldown menu
+  - pulldown menu is dynamically updated using account:partition selection
 - Dynamic account:partition pulldown menu
+  - pulldown menu is dynamically updated using cluster selection
 - Universal form.js for all apps
+  - all apps use universal form.js, regardless of single/multinode, GPU/non-GPU app.
 
 Version 3.3
 - Advanced options with checkbox
