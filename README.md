@@ -1,8 +1,12 @@
 # OOD-apps
 Repository of CHPC's Open OnDemand apps
 
-Version 3.3
+Version 3.4
+- Dynamic GPU pulldown menu
+- Dynamic account:partition pulldown menu
+- Universal form.js for all apps
 
+Version 3.3
 - Advanced options with checkbox
   - all advanced options have their own checkboxes to offer input when checked
   - advanced options is checked if any advanced option is selected
@@ -12,7 +16,6 @@ Version 3.3
   - form_params_multinode - Comsol, Lumerical
   - form_params_gpu_multinode - Abaqus, AnsysWB, AnsysEDT, Relion
   - no form_params - just Friscos - Coot, IDV, Meshroom, Paraview, VMD
-
 
 Version 3.2
 - templated submit.yml.erb
