@@ -23,6 +23,7 @@ GEM
     rack-protection (2.1.0)
       rack
     rake (13.0.6)
+    rexml (3.2.6)
     ruby2_keywords (0.0.5)
     sinatra (2.1.0)
       mustermann (~> 1.0)
@@ -42,7 +43,8 @@ DEPENDENCIES
   mocha
   ood_core (~> 0.11)
   rake
+  rexml
   sinatra
 
 BUNDLED WITH
-   2.1.4
+   2.2.33

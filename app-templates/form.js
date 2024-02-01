@@ -88,7 +88,7 @@ function filterGPUOptions() {
             // Add available GPUs as options
             availableGPUs.forEach(gpu => {
                 if (gpuMapping[gpu]) // Check for mapping
-                    gpuSelect.append(new Option(gpuMapping[gpu], gpuMapping[gpu]));
+                    gpuSelect.append(new Option(gpuMapping[gpu], gpu));
             });
             gpuSelect.parent().show(); // Show GPU selection field
         } else {
@@ -190,7 +190,7 @@ function toggleAdvancedOptions() {
         advancedOptions: $('#batch_connect_session_context_advanced_options')
     };
 
-    // Helper function to toggle visibility based on a condition
+    // Helper function to toggle visibility
     function toggleVisibility(element, condition) {
         if (element) {
             condition ? element.parent().show() : element.parent().hide();
