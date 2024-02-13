@@ -7,7 +7,8 @@ Version 3.4
 - Dynamic account:partition pulldown menu
   - pulldown menu is dynamically updated using cluster selection
 - Universal form.js for all apps
-  - all apps use universal form.js, regardless of single/multinode, GPU/non-GPU app.
+  - all apps use universal form.js, regardless of single/multinode, GPU/non-GPU app
+  - refactored JavaScript funtions help performance
 
 Version 3.3
 - Advanced options with checkbox
