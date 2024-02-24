@@ -11,6 +11,7 @@ title: <%= app_name %>
 attributes:
   gpudata:
     widget: hidden_field
+    cacheable: false
     value: |
       "<%= gpu_data.to_json %>"
   interface:
@@ -26,6 +27,12 @@ attributes:
     help: "This defines the Python distribution of <%= app_name %> you want to start."
     options:
       - [  "CHPC Python 3.10.3", "python/3.10.3",
+           data-hide-custom-environment: true
+        ]
+      - [  "CHPC Python 3.11.3", "python/3.11.3",
+           data-hide-custom-environment: true
+        ]
+      - [ "CHPC Deep Learning 2024.1", "deeplearning/2024.1",
            data-hide-custom-environment: true
         ]
       - [ "CHPC Deep Learning 2023.3", "deeplearning/2023.3",

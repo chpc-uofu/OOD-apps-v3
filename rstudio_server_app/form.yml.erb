@@ -11,6 +11,7 @@ title: <%= app_name %>
 attributes:
   gpudata:
       widget: hidden_field
+      cacheable: false
       value: |
         "<%= gpu_data.to_json %>"
   version:
@@ -20,6 +21,7 @@ attributes:
     options:
       - [ "R 4.1.3 CHPC build", "4.1.3"]
       - [ "R 4.2.2 CHPC build", "4.2.2"]
+      - [ "R 4.3.2 CHPC build", "4.3.2"]
       - [ "R 4.3.2 Basic packages", "4.3.2-basic"]
       - [ "R 4.3.2 Bioconductor packages", "4.3.2-bioconductor"]
       - [ "R 4.3.2 Geospatial packages", "4.3.2-geospatial"]

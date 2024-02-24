@@ -6,10 +6,10 @@
 module purge
 
 # Local RStudio Server with CHPC built R versions
-<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   module load R/<%= context.version %>
   echo R version is <%= context.version %>
-  RSPATH="/uufs/chpc.utah.edu/sys/installdir/rstudio-server/2021.09.2/bin/"
+  RSPATH="/uufs/chpc.utah.edu/sys/installdir/rstudio-server/2023.12.0-369/bin/"
   # let the RStudio session use all the threads it can get (we set OMP_NUM_THREADS=1 in some R modules)
   unset OMP_NUM_THREADS
 <%- if context.additional_environment != "" -%>
@@ -59,7 +59,7 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   #echo R_LIBS_SITE $R_LIBS_SITE
   #env
   # load all the modules that are set in the Environment section
-<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   module load R/<%= context.version %>
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>
@@ -133,7 +133,7 @@ echo "Starting up rserver..."
 set -x
 export RSTUDIO_DATA_HOME=$WORKDIR
 
-<%- if context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   # sqlite is needed for the RS database      
   # it's part of the R8 OS installation, module below was built on CentOS 7
   # ml sqlite

@@ -11,6 +11,7 @@ title: <%= app_name %>
 attributes:
   gpudata:
     widget: hidden_field
+    cacheable: false
     value: |
       "<%= gpu_data.to_json %>"
   cluster:

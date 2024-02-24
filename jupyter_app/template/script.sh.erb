@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# debugging info
-module list
 
 # Set working directory to home directory
 cd "${HOME}"
@@ -15,6 +13,9 @@ cd "${HOME}"
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>
 <%- end -%>
+
+# debugging info
+module list
 
 # Workaround for directory permission error
 #unset XDG_RUNTIME_DIR

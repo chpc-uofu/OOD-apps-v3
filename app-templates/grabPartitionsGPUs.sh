@@ -10,7 +10,7 @@ CLUSTER_FILE="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/cluster.t
 > $OUTPUT_FILE
 
 # Special case for notchpeak-shared-short
-SPECIAL_PARTITION="notchpeak-shared-short"
+SPECIAL_PARTITION=( "notchpeak-shared-short" "efd-np" "tbicc-np" "civil-np" "efd-shared-np" "tbicc-shared-np" "civil-shared-np" )
 
 # Function to process a partition
 process_partition() {
@@ -25,12 +25,14 @@ process_partition() {
 # Iterate over each cluster
 while read cluster; do
     # Get a list of partitions for current cluster
-    partitions=$(sinfo -M $cluster | grep gpu | awk '{print $1}')
+    partitions=$(sinfo -M $cluster | grep gpu | awk '{print $1}' | uniq)
 
     # Add shared-short to the list
-    if sinfo -M $cluster -p $SPECIAL_PARTITION | grep -q $SPECIAL_PARTITION; then
-        partitions="$partitions $SPECIAL_PARTITION"
-    fi
+    for part in  ${SPECIAL_PARTITION[@]}; do
+        if sinfo -M $cluster -p $part | grep -q $part; then
+            partitions="$partitions $part"
+        fi
+    done
 
     # Iterate over each partition
     for partition in $partitions; do
