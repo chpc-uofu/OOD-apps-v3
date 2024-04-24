@@ -41,7 +41,7 @@ cd "${HOME}"
 
 # Load the required environment
 module load intel # for Intel MPI
-module load <%= context.version %>
+module load <%= context.auto_modules_ansysedt %>
 # additional environment
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>

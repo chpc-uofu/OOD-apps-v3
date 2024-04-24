@@ -2,9 +2,6 @@
 app_name = "Abaqus"
 mod_name = "abaqus"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 gpu_data = {
   gpu_partitions: CustomGPUPartitions.gpu_partitions,
   gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
@@ -13,16 +10,9 @@ gpu_data = {
 ---
 title: <%= app_name %>
 attributes:
-  version:
-    widget: select
-    label: <%= app_name %> version
+  auto_modules_abaqus:
+    default: false
     help: "This defines the version of <%= app_name %> you want to load."
-    options:
-      <% modules.lines.reverse.each do |line| %>
-      <% unless line.to_s.strip == "" %>
-      - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
-      <% end %>    
-      <% end %>
   gpudata:
       widget: hidden_field
       cacheable: false
@@ -61,7 +51,7 @@ attributes:
 <% end %>   
 
 form:
-  - version
+  - auto_modules_abaqus
   - license_type
 <% IO.foreach(template_root+"form_params_gpu_multinode") do |line| %>
 <%= line %>

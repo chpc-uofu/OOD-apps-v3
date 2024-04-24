@@ -40,7 +40,7 @@ cd "${HOME}"
 # Load the required environment
 #module load intel # for Intel MPI
 #module load gcc/4.8.5 impi # for Intel MPI
-module load <%= context.version %>
+module load <%= context.auto_modules_ansys %>
 # additional environment
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>
@@ -86,7 +86,7 @@ if [ -v "$SLURM_JOBID" ]; then
  # Error retrieving full host information list: getChildList: unable to find the requested path
  # ANSYS 20.1 is fine, though the perl, etc, are the same
  # see https://blogs.fau.de/zeiser/2012/08/23/why-cfx5solve-from-ansys-13-0-fails-on-suse-sles11sp2/
- if [ <%= context.version %> = "ansys/21.1" ]; then
+ if [ <%= context.auto_modules_ansys %> = "ansys/21.1" ]; then
    /uufs/chpc.utah.edu/sys/installdir/ansys/20.1/v201/CFX/bin/cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"
  else
    cfx5parhosts -add "${NODES}" -user -file "${CFX5_HOSTS_CCL}"

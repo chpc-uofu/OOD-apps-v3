@@ -32,7 +32,7 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load <%= context.version %>
+module load <%= context.auto_modules_stata %>
 # additional environment
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>

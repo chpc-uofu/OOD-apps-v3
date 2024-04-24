@@ -1,24 +1,13 @@
 <%
 app_name = "Paraview"
-mod_name = "paraview"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 %>
 ---
 title: <%= app_name %>
 attributes:
-  version:
-    widget: select
-    label: <%= app_name %> version
+  auto_modules_paraview:
+    default: false
     help: "This defines the version of <%= app_name %> you want to load."
-    options:
-      <% modules.lines.reverse.each do |line| %>
-      <% unless line.to_s.strip == "" %>
-      - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
-      <% end %>
-      <% end %>
   cluster:
     widget: "select"
     options:
@@ -29,5 +18,5 @@ attributes:
       Select the Frisco node to create this session on.<br>
 
 form:
-  - version
+  - auto_modules_paraview
   - cluster

@@ -335,6 +335,6 @@ for scatter in fig.data:
         print(f'[{now}] undefined legendgroup: {legendgroup}', file=fh)
   
 if not __ANIM_MODE__: 
-  plotly.offline.plot(fig,filename="sol2.html",include_plotlyjs="cdn")
+  plotly.offline.plot(fig,filename="sol2.html",include_plotlyjs="cdn",auto_open = False)
 else:
   fig.write_image(f"anim/{datafile.split('/')[-1].split('.')[0]}.png",scale=2)

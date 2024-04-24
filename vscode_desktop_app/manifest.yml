@@ -1,0 +1,30 @@
+---
+name: Visual Studio Code Desktop
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [VSCode] IDE on a [HPC cluster] or on a [Frisco node]. You will be able
+  to interact with the VSCode IDE through a VNC session.
+
+  [GPU specification] is optional for the partitions that have them.
+
+  NOTE: To **initially** set up GitHub Copilot, follow these steps:
+
+  1. Open a FastX XFCE remote desktop or OnDemand Interactive Desktop session
+  2. Change the default browser from Firefox to Chrome
+    - Select upper left corner menu Applications - Settings - Default Applications
+    - Replace Mozilla Firefox with Google Chrome under the Web Browser pull-down
+  3. Start this VSCode Desktop app, find and install the GitHub Copilot extension
+  4. Click on the User symbol in the lower left corner and choose Sign in GitHub to use GitHub Copilot.
+  5. A Chrome browser window will appear with a dialog window talking about XDG, approve that and a `Failed to open URI` window will show. Click Close on the window, and close Chrome - this authentication way does not work because of a missing browser plugin in our OS installation
+  6. Click Cancel in the VSCode Github authentication window, it will offer to `try a different way`. Click Yes to that.
+  7. After some time another browser window pops up saying `You are signed in`. Close the browser, VSCode should be signed to GitHub and Copilot should be available.
+
+  After this you may just need to periodically re-authenticate following steps 4-7.
+
+
+  [VSCode]: https://code.visualstudio.com/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview

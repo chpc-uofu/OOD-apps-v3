@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -x
 # Clean the environment
 module purge
 
@@ -33,7 +34,7 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load <%= context.version %>
+module load <%= context.auto_modules_sas %>
 # additional environment
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>

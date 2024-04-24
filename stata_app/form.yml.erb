@@ -1,6 +1,5 @@
 <%
 app_name = "STATA"
-mod_name = "stata"
 template_root = "/var/www/ood/apps/templates/"
 gpu_data = {
   gpu_partitions: CustomGPUPartitions.gpu_partitions,
@@ -10,18 +9,14 @@ gpu_data = {
 ---
 title: <%= app_name %>
 attributes:
+  auto_modules_stata:
+    default: false
+    help: "This defines the version of <%= app_name %> you want to load."
   gpudata:
       widget: hidden_field
       cacheable: false
       value: |
         "<%= gpu_data.to_json %>"
-  version:
-    widget: select
-    label: <%= app_name %> version
-    help: "This defines the version of <%= app_name %> you want to load."
-    options:
-      - [ "17", "stata/17" ]
-      - [ "18", "stata/18" ]
   cluster:
     widget: select
     options:
@@ -49,7 +44,7 @@ attributes:
 <% end %>   
 
 form:
-  - version
+  - auto_modules_stata
 <% IO.foreach(template_root+"form_params_gpu") do |line| %>
 <%= line %>
 <% end %>

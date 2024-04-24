@@ -22,7 +22,7 @@ SIMULATION CONTROL:
               Start Command = "%{impidir}/bin/mpirun" -genv I_MPI_PLATFORM auto <%- if session.cluster_id=="scrubpeak" or session.cluster_id=="lonepeak" -%>-genv I_MPI_FABRICS tcp <%- end -%> -r "%{env:I_MPI_MPD_RSH}" -configfile "%{req:appfile}"
               Execution Path = %{impidir}/bin
               Appfile Host Entry = -n %{hostprocs} -host %{hostname} %{executable} %{arguments}
-              <%- if context.version == "ansys/17.1" -%>
+              <%- if context.auto_modules_ansys == "ansys/17.1" -%>
               Executable Suffix = -impi
               <%- else -%>
               Executable Suffix = -mpi

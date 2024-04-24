@@ -5,7 +5,7 @@
 #set -x
 set -euo pipefail
 
-readonly working_dir="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps-v3.3/chpc-lonepeak-status"
+readonly working_dir="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/chpc-lonepeak-status"
 cd "$working_dir"
 
 readonly density_limit=10 # save one per ten minutes

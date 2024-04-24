@@ -3,4 +3,4 @@
 
 # no Lmod in non-interactive shell, so need to source it
 source /uufs/chpc.utah.edu/sys/etc/profile.d/module.sh
-module -t spider $1 2>&1
+$LMOD_DIR/spider -o spider-json $MODULEPATH > /uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/modules/notchpeak.json

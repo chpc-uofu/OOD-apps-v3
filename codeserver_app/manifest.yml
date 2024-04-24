@@ -7,6 +7,9 @@ description: |
   This app will launch a [VS Code] server using [Code Server] on a [HPC
   cluster] or on a [Frisco node].
 
+  NOTE: VSCode Server does not allow additional authentication, which means that GitHub
+  Copilot is not available. Please, use the VSCode Desktop app for that.
+
   [VS Code]: https://code.visualstudio.com/
   [Code Server]: https://coder.com/
   [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php

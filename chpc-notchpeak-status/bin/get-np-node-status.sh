@@ -2,10 +2,10 @@
 # VERSION: 0.7
 # BLAME: Jason <yalim@asu.edu>
 # BLAME: MC <m.cuma@utah.edu>
-# set -x
+#set -x
 set -euo pipefail
 
-readonly working_dir="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps-v3.3/chpc-notchpeak-status"
+readonly working_dir="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/chpc-notchpeak-status"
 cd "$working_dir"
 
 readonly density_limit=10 # save one per ten minutes

@@ -2,9 +2,6 @@
 app_name = "ANSYS Electronics Desktop"
 mod_name = "ansysedt"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 gpu_data = {
   gpu_partitions: CustomGPUPartitions.gpu_partitions,
   gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
@@ -13,17 +10,9 @@ gpu_data = {
 ---
 title: <%= app_name %>
 attributes:
-  version:
-    widget: select
-    label: <%= app_name %> version
-    help: |
-      This defines the version of <%= app_name %> you want to load.<br> NOTE: First start of the program takes ~10 minutes, you will be seeing a blank browser tab. Wait till the initialization completes.
-    options:
-      <% modules.lines.reverse.each do |line| %>
-      <% unless line.to_s.strip == "" %>
-      - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
-      <% end %>    
-      <% end %>
+  auto_modules_ansysedt:
+    default: false
+    help: "This defines the version of <%= app_name %> you want to load."
   gpudata:
       widget: hidden_field
       cacheable: false
@@ -56,7 +45,7 @@ attributes:
 <% end %>   
 
 form:
-  - version
+  - auto_modules_ansysedt
 <% IO.foreach(template_root+"form_params_gpu_multinode") do |line| %>
 <%= line %>
 <% end %>

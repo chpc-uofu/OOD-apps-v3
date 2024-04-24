@@ -70,30 +70,31 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   # Note that the rsession brings in limited environment, it imports PATH, LD_LIBRARY_PATH, MANPATH, ...
   # but not other env. vars. that Lmod needs so "module list" is empty
   exec ${RSPATH}rsession --r-libs-user "${R_LIBS_USER}" "\${@}"
+# error --config-file can'd be specified more than once on the command line
+#  exec ${RSPATH}rsession --config-file "${WORKDIR}/rsession.conf" --r-libs-user "${R_LIBS_USER}" "\${@}"
 EOL
 )
 chmod 700 "${RSESSION_WRAPPER_FILE}"
 
-# rsession launcher complains about not knowing the auth-* options despite being 
-# documented in https://docs.rstudio.com/ide/server-pro/rstudio-server-configuration.html#rserver.conf
-# workspace options https://docs.posit.co/ide/server-pro/rstudio_pro_sessions/workspace_management.html
-#if [[ $string =~ "-" ]]; then
-#  WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk -F'[-:]' '{ print $1*24*60 + $2*60 + $3 }'`
-#else
-#  WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk -F'[:]' '{ print $1*60 + $2 }'`
-#fi
+# Job walltime in minutes for the authentication timeout setting
 WALLMIN=`squeue -h -j $SLURM_JOBID -o "%l" | awk '{split($1, tokens, "-"); if (length(tokens) == 1) { days=0; time=tokens[1]; } else { days=tokens[1]; time=tokens[2]; } split(time, times, ":"); print 60*(times[1]+24*days) + times[2] }'`
+
 
 cat >${WORKDIR}/rserver.conf <<END
 # Server Configuration File
+# complaint that auth-timeout-minutes is unrecognized despite https://docs.posit.co/ide/server-pro/authenticating_users/authorization_timeout.html
+# must be only the pro option, but based on https://docs.posit.co/ide/server-pro/rstudio-server-configuration.html it's not only in pro
+# these two settings are set as command line arguments
 # auth-timeout-minutes=0
 # auth-stay-signed-in-days=10
-# rsession-which-r=/usr/local/bin/R
 session-save-action-default=no
 session-timeout-minutes=$WALLMIN
 session-timeout-suspend=0
 session-rprofile-on-resume-default=0
 session-quit-child-processes-on-exit=1
+<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" or context.version == "4.3.2-basic" or context.version == "4.3.2-bioconductor" or context.version == "4.3.2-geospatial" -%>
+copilot-enabled=1
+<%- end -%>
 END
 
 # [Rstudio 1.4] database is required
@@ -146,7 +147,7 @@ export RSTUDIO_DATA_HOME=$WORKDIR
     --auth-encrypt-password 0 \
     --rsession-path "${RSESSION_WRAPPER_FILE}" \
     --server-data-dir "${TMPDIR}" \
-    --auth-timeout-minutes=0 \
+    --auth-timeout-minutes="${WALLMIN}" \
     --server-app-armor-enabled=0 \
     --secure-cookie-key-file "${TMPDIR}/rstudio-server/secure-cookie-key" \
     --database-config-file ${WORKDIR}/database.conf \
@@ -163,15 +164,16 @@ export RSTUDIO_DATA_HOME=$WORKDIR
   export SING_BINDS2="--bind ${WORKDIR}/logging.conf:/etc/rstudio/logging.conf --bind ${WORKDIR}/database.conf:/etc/rstudio/database.conf"
 
   singularity exec ${SING_BINDS} ${SING_BINDS2} ${RSTUDIO_SINGULARITY_IMAGE} rserver \
-    --www-port="${port}" \
     --server-user ${USER} \
+    --www-port="${port}" \
     --auth-none=0 \
     --auth-pam-helper-path="${RSTUDIO_AUTH}" \
     --auth-encrypt-password=0 \
     --rsession-path="${RSESSION_WRAPPER_FILE}" \
+    --auth-timeout-minutes="${WALLMIN}" \
+    --server-app-armor-enabled=0 \
     --secure-cookie-key-file "${TMPDIR}/rstudio-server/secure-cookie-key" \
     --server-daemonize=0 \
-    --server-app-armor-enabled=0 \
     --rsession-which-r=/usr/local/bin/R \
     --rsession-config-file ${WORKDIR}/rserver.conf
 
