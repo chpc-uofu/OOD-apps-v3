@@ -1,0 +1,39 @@
+---
+title: "Spark Jupyter"
+attributes:
+  cluster: 
+    widget: "select"
+    options:
+      - "notchpeak"
+  bc_num_hours:
+    value: 1
+    min: 1
+    max: 8
+    step: 1
+    help: "Maximum wall time on notchpeak-shared-short is 8 hours."
+  num_nodes:
+    label: "Number of nodes"
+    widget: "number_field"
+    value: 1
+    min: 1
+    max: 2
+    step: 1
+    help: "Maximum is 2."
+  my_account:
+    label: "Account"
+    widget: "select"
+    options:
+      - "notchpeak-shared-short"
+  my_queue:
+    label: "Partition"
+    widget: "select"
+    options:
+      - "notchpeak-shared-short"
+
+form:
+  - cluster
+  - bc_num_hours
+  - num_nodes
+  - my_account
+  - my_queue
+  - bc_email_on_started

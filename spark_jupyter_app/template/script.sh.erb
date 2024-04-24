@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# check if $HOME/spark exists and if not create it
+# that's where the log files go
+if [ ! -d $HOME/spark ];then
+  mkdir $HOME/spark
+fi
+
+# load the CHPC python with Jupyter, NumPy, Pandas
+if [ <%= context.auto_modules_spark %> = "spark/3.5.0" ]; then
+  module load miniconda3/pyspark-3.5
+  module load spark/3.5.0      
+fi
+export SPARK_LOG_DIR=$HOME/spark
+export SPARK_MASTER_OPTS="-Dspark.port.maxRetries=63"
+export SPARK_WORKER_OPTS="-Dspark.worker.port.maxRetries=63"
+$SPARK_ROOT/sbin/start-master.sh >& $SPARK_LOG_DIR/master.log
+export SPARK_MASTER_LOGFILE=`cat $SPARK_LOG_DIR/master.log | awk '{print $NF}'`
+# the log output is delayed, need to sleep some for the log writeout to finish
+echo Spark master log file is $SPARK_MASTER_LOGFILE
+sleep 30
+sync
+export SPARK_MASTER_ADDRESS=`grep "spark://" $SPARK_MASTER_LOGFILE | awk '{print $NF}'`
+export SPARK_MASTER_WEBUI_ADDRESS=`grep "http://" $SPARK_MASTER_LOGFILE | awk '{print $NF}'`
+
+export SPARK_MASTER_OOD_ADDRESS=https://ondemand-class.chpc.utah.edu/rnode/`echo $SPARK_MASTER_WEBUI_ADDRESS | cut -c 8- | tr : /`
+
+echo Spark master address is $SPARK_MASTER_ADDRESS
+
+export SPARK_WORKER_DIR=$HOME/spark
+
+a=$(( 0 ))
+for worker in `srun -n $SLURM_NTASKS hostname -f`; do
+  echo Worker $a is $worker, master is $SPARK_MASTER_ADDRESS
+  # start-remote-worker.sh is a custom script to start worker via ssh
+  ssh $worker $SPARK_ROOT/sbin/start-remote-worker.sh $SPARK_MASTER_ADDRESS >& $SPARK_LOG_DIR/worker.log
+  sleep 10
+  sync
+  export SPARK_WORKER_LOGFILE=`cat $SPARK_LOG_DIR/worker.log | awk '{print $NF}'`
+  echo $SPARK_WORKER_LOGFILE
+  a=$(( $a + 1 ))
+  export SPARK_WORKER${a}_WEBUI_ADDRESS=`grep "http://" $SPARK_WORKER_LOGFILE | awk '{print $NF}'`
+  varname=SPARK_WORKER${a}_WEBUI_ADDRESS
+  echo Worger $a webui address ${!varname}
+  export SPARK_WORKER${a}_OOD_ADDRESS=https://ondemand-class.chpc.utah.edu/rnode/`echo ${!varname} | cut -c 8- | tr : /`
+done
+
+# to export to PDF:
+module load texlive/2019
+#
+# Start Jupyter Notebook Server
+#
+
+# Workaround for directory permission error
+#unset XDG_RUNTIME_DIR
+#export XDG_RUNTIME_DIR=""
+
+# List available kernels for debugging purposes
+#set -x
+jupyter kernelspec list
+{ set +x; } 2>/dev/null
+echo "TTT - $(date)"
+
+jupyter --paths
+
+#jupyter notebook --generate-config 
+# Launch the Jupyter Notebook Server
+# jupyter notebook --config="${CONFIG_FILE}" --debug
+jupyter notebook --config="${CONFIG_FILE}" 
