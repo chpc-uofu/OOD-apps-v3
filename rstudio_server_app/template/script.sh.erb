@@ -6,7 +6,7 @@
 module purge
 
 # Local RStudio Server with CHPC built R versions
-<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.4.0" or context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   module load R/<%= context.version %>
   echo R version is <%= context.version %>
   RSPATH="/uufs/chpc.utah.edu/sys/installdir/rstudio-server/2023.12.0-369/bin/"
@@ -59,7 +59,7 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   #echo R_LIBS_SITE $R_LIBS_SITE
   #env
   # load all the modules that are set in the Environment section
-<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.4.0" or context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   module load R/<%= context.version %>
 <%- if context.additional_environment != "" -%>
   <%= context.additional_environment.gsub /\r\n?/, "\n" %>
@@ -92,7 +92,7 @@ session-timeout-minutes=$WALLMIN
 session-timeout-suspend=0
 session-rprofile-on-resume-default=0
 session-quit-child-processes-on-exit=1
-<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" or context.version == "4.3.2-basic" or context.version == "4.3.2-bioconductor" or context.version == "4.3.2-geospatial" -%>
+<%- if context.version == "4.4.0" or context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" or context.version == "4.3.2-basic" or context.version == "4.3.2-bioconductor" or context.version == "4.3.2-geospatial" -%>
 copilot-enabled=1
 <%- end -%>
 END
@@ -134,7 +134,7 @@ echo "Starting up rserver..."
 set -x
 export RSTUDIO_DATA_HOME=$WORKDIR
 
-<%- if context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
+<%- if context.version == "4.4.0" or context.version == "4.3.2" or context.version == "4.2.2" or context.version == "4.1.1" or context.version == "4.1.3" -%>
   # sqlite is needed for the RS database      
   # it's part of the R8 OS installation, module below was built on CentOS 7
   # ml sqlite

@@ -10,7 +10,7 @@ CLUSTER_FILE="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/cluster.t
 > $OUTPUT_FILE
 
 # Special case for notchpeak-shared-short
-SPECIAL_PARTITION=( "notchpeak-shared-short" "efd-np" "tbicc-np" "civil-np" "efd-shared-np" "tbicc-shared-np" "civil-shared-np" )
+SPECIAL_PARTITION=( "notchpeak-shared-short" "efd-np" "tbicc-np" "civil-np" "efd-shared-np" "tbicc-shared-np" "civil-shared-np" "notchpeak-eval" )
 
 # Function to process a partition
 process_partition() {
