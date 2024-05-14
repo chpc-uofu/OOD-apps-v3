@@ -67,6 +67,9 @@ diagnostic statistics on the plotly figure, i.e.,
       w :: figure width in pixels
       h :: figure height in pixels
 
+Dynamic partition selecting
+---------
+
 Ideas for further improvements
 ---------
 
