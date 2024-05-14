@@ -70,6 +70,9 @@ diagnostic statistics on the plotly figure, i.e.,
 Dynamic partition selecting
 ---------
 
+You can now view nodes based on a selected partition. Navigate to the top and select a partition on the cluster from the dropdown (i.e. notchpeak-gpu). Selecting "All partitions" will reset the graph.
+
+
 Ideas for further improvements
 ---------
 
