@@ -72,7 +72,7 @@ Dynamic partition selecting
 
 You can now view nodes based on a selected partition. Navigate to the top and select a partition on the cluster from the dropdown (i.e. notchpeak-gpu). Selecting "All partitions" will reset the graph.
 
-Graph data is changed via injected JavaScript in `get-np-node-status-sh` using `awk`. On page load, snapshot data is loaded into browser cache. Upon partition selection, JavaScript parses through `plotly` data and gathers nodes associated with the selected partition. A new dataframe is constructed using a data and is regenerated on the page using `plotly.react()`.
+Graph data is changed via injected JavaScript in `get-np-node-status-sh` using `awk`. On page load, snapshot data is loaded into browser cache. Upon partition selection, JavaScript parses through `plotly` data and gathers nodes associated with the selected partition. A new dataframe is constructed using the filtered data and is regenerated on the page using `plotly.react()`.
 
 
 Ideas for further improvements
