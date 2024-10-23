@@ -4,6 +4,9 @@
 # Clean the environment
 module purge
 
+# some debug info
+echo SLURM job $SLURM_JOBID
+
 # this is needed to make the IBM/Platform MPI happy with SLURM
 unset SLURM_GTIDS
 
