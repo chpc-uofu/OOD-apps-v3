@@ -1,24 +1,24 @@
 type="text/javascript"
 //# sourceURL=form.js
 
-// Strict mode for more secure code
 'use strict';
 
 // SETUP ---------------------------------------------------------------------------------------------------------------
 
-// Get list of partitions and their associated GPUs
+/**
+ * Retrieves GPU data from the form and parses it into a usable format.
+ */
 const gpuDataField = document.getElementById('batch_connect_session_context_gpudata');
 const gpuData = gpuDataField.value.toString().substring(1, gpuDataField.value.length - 2);
 const gpuDataHash = JSON.parse(gpuData);
 
-// Mapping of GPU identifiers to their descriptions
+/**
+ * Maps GPU identifiers to their descriptions.
+ */
 const gpuMapping = gpuDataHash["gpu_name_mappings"].reduce((mapping, str) => {
-    // Split string by last comma to separate description from GPU identifier
     const lastCommaIndex = str.lastIndexOf(',');
     const description = str.substring(0, lastCommaIndex).trim().replace(/^'|'$/g, '');
     const gpuId = str.substring(lastCommaIndex + 1).trim().replace(/^'|'$/g, '');
-
-    // Assign description to GPU identifier in mapping object
     mapping[gpuId] = description;
     return mapping;
 }, {});
@@ -31,12 +31,10 @@ const gpuMapping = gpuDataHash["gpu_name_mappings"].reduce((mapping, str) => {
  * @param {string} selected_queue - The selected queue identifier.
  */
 function partitionLimits(selected_queue) {
-    // Get Form Fields
     const time = $('#batch_connect_session_context_bc_num_hours');
     const cpus = $('#batch_connect_session_context_num_cores');
     const mem = $('#batch_connect_session_context_memtask');
 
-    // Define queue configurations
     const queueConfigs = {
         "notchpeak-shared-short:notchpeak-shared-short": { max_time: 8, max_cpu: 16, max_mem: 128 },
         "smithp-ash": { max_time: 168, max_cpu: 24, max_mem: 490 },
@@ -45,17 +43,19 @@ function partitionLimits(selected_queue) {
         "np": { max_time: 336, max_cpu: 64, max_mem: 1000 }
     };
 
-    // Find the appropriate queue configuration or use default values
     let config = Object.entries(queueConfigs).find(([key, _]) => selected_queue.includes(key));
     let { max_time, max_cpu, max_mem } = config ? config[1] : { max_time: 72, max_cpu: 64, max_mem: 764 };
 
-    // Set and adjust form fields
     setFormField(time, max_time);
     setFormField(cpus, max_cpu);
     setFormField(mem, max_mem);
 }
 
-// Utility function for partitionLimits
+/**
+ * Utility function to set form field values and attributes.
+ * @param {object} field - The form field element.
+ * @param {number} maxValue - The maximum value to set.
+ */
 function setFormField(field, maxValue) {
     if (field.val() > maxValue) {
         field.val(maxValue);
@@ -75,35 +75,30 @@ function filterGPUOptions() {
     const gpuSelect = $('#batch_connect_session_context_gpu_type');
     gpuSelect.empty(); // Clear existing options
 
-    // Always add a 'none' option
     gpuSelect.append(new Option('none', 'none'));
 
     if (partitionString) {
         const availableGPUs = partitionString.split(',').slice(1).map(gpu => gpu.trim());
 
         if (availableGPUs.length > 0) {
-            // Add 'any' option if GPUs are available
             gpuSelect.append(new Option('any', 'any'));
-
-            // Add available GPUs as options
             availableGPUs.forEach(gpu => {
-                if (gpuMapping[gpu]) // Check for mapping
+                if (gpuMapping[gpu]) 
                     gpuSelect.append(new Option(gpuMapping[gpu], gpu));
             });
-            gpuSelect.parent().show(); // Show GPU selection field
+            gpuSelect.parent().show();
         } else {
-            gpuSelect.parent().show(); // Still show field with 'none' option
+            gpuSelect.parent().show();
         }
     } else {
-        gpuSelect.parent().show(); // Show field with only 'none' option if partition not found
+        gpuSelect.parent().show();
     }
 }
 
 /**
- * Helper function to set default GPU option on partition change.
+ * Sets the default GPU option on partition change.
  */
 function setDefaultGPU() {
-    // Get GPU select element
     const gpuSelect = document.getElementById('batch_connect_session_context_gpu_type');
     gpuSelect.selectedIndex = 0;
 }
@@ -112,16 +107,10 @@ function setDefaultGPU() {
  * Filters account and partition options based on cluster selection.
  */
 function filterAccountPartitionOptions() {
-    // Get selected value from cluster dropdown
     const selectedCluster = document.getElementById('batch_connect_session_context_cluster').value;
-
-    // Get account:partition select element
     const accountPartitionSelect = document.getElementById('batch_connect_session_context_custom_accpart');
-
-    // Get all options within account:partition select
     const options = accountPartitionSelect.options;
 
-    // Define mapping for cluster names and acronyms
     const clusterAcronyms = {
         'ash': 'ash',
         'kingspeak': 'kp',
@@ -129,33 +118,24 @@ function filterAccountPartitionOptions() {
         'notchpeak': 'np'
     };
 
-    // Loop over options and hide those that do not match selected cluster
     for (let i = 0; i < options.length; i++) {
         const option = options[i];
-
-        // Determine if the option value should be visible
         const isOptionVisible = option.value.indexOf(selectedCluster) >= 0 ||
             (clusterAcronyms[selectedCluster] && option.value.indexOf(clusterAcronyms[selectedCluster]) >= 0);
-
-        // Set display style based on whether option should be visible
         option.style.display = isOptionVisible ? 'block' : 'none';
     }
-    // Reset advanced options for cluster change
     toggleAdvancedOptions();
 }
 
 /**
- * Helper function to set a default partition on cluster change.
+ * Sets the default partition on cluster change.
  */
 function setDefaultPartition() {
-    // Get account:partition select element
     const accountPartitionSelect = document.getElementById('batch_connect_session_context_custom_accpart');
     const options = accountPartitionSelect.options;
 
-    // Iterate through options to find first one not hidden
     for (let i = 0; i < options.length; i++) {
         if (options[i].style.display !== 'none') {
-            // Set first available option as selected
             accountPartitionSelect.selectedIndex = i;
             return;
         }
@@ -166,11 +146,8 @@ function setDefaultPartition() {
 
 /**
  * Toggles the visibility of advanced options in the form.
- * It shows or hides various input fields based on the state of their corresponding checkboxes
- * and the values of the input fields themselves.
  */
 function toggleAdvancedOptions() {
-    // Cache jQuery selectors for elements to improve performance
     const elements = {
         memtask: $('#batch_connect_session_context_memtask'),
         gpuType: $('#batch_connect_session_context_gpu_type').length > 0 ? $('#batch_connect_session_context_gpu_type') : null,
@@ -190,214 +167,156 @@ function toggleAdvancedOptions() {
         advancedOptions: $('#batch_connect_session_context_advanced_options')
     };
 
-    // Helper function to toggle visibility
     function toggleVisibility(element, condition) {
         if (element) {
             condition ? element.parent().show() : element.parent().hide();
         }
     }
 
-    // Check if advanced options checkbox is checked
-    if (elements.advancedOptions.is(':checked')) {
-        toggleVisibility(elements.checkboxes.memtask, true);
-        toggleVisibility(elements.memtask, elements.memtask.val() !== "0" && elements.memtask.val() !== "");
+    const showAdvanced = elements.advancedOptions.is(':checked');
 
-        // Logic for GPU fields, if applicable
-        if (elements.gpuType && elements.gpuCount && elements.checkboxes.gpu) {
-            toggleVisibility(elements.checkboxes.gpu, true);
-            const isGPUSelected = elements.gpuType.val() !== "none";
-            toggleVisibility(elements.gpuType, isGPUSelected);
-            toggleVisibility(elements.gpuCount, isGPUSelected);
-        }
+    Object.values(elements.checkboxes).forEach(checkbox => {
+        if (checkbox) toggleVisibility(checkbox, showAdvanced);
+    });
 
-        const isNodelistSelected = elements.nodelist.val() !== "" || elements.checkboxes.nodelist.is(':checked');
-        toggleVisibility(elements.nodelist, isNodelistSelected);
+    toggleVisibility(elements.memtask, showAdvanced && elements.checkboxes.memtask.is(':checked'));
+    toggleVisibility(elements.nodelist, showAdvanced && elements.checkboxes.nodelist.is(':checked'));
+    toggleVisibility(elements.additionalEnvironment, showAdvanced && elements.checkboxes.addEnv.is(':checked'));
+    toggleVisibility(elements.constraint, showAdvanced && elements.checkboxes.constraint.is(':checked'));
 
-        toggleVisibility(elements.additionalEnvironment, elements.additionalEnvironment.val() !== "");
-        toggleVisibility(elements.constraint, elements.constraint.val() !== "");
+    if (elements.gpuType && elements.gpuCount && elements.checkboxes.gpu) {
+        toggleVisibility(elements.gpuType, showAdvanced && elements.checkboxes.gpu.is(':checked'));
+        toggleVisibility(elements.gpuCount, showAdvanced && elements.checkboxes.gpu.is(':checked') && elements.gpuType.val() !== "none");
+    }
 
-        // Logic for nodes field, if applicable
-        if (elements.numNodes && elements.checkboxes.nodes) {
-            let shouldShowNodes = elements.checkboxes.nodes.is(':checked') || elements.numNodes.val() !== "1";
-            toggleVisibility(elements.numNodes, shouldShowNodes);
-            toggleVisibility(elements.checkboxes.nodes, true);
+    if (elements.numNodes && elements.checkboxes.nodes) {
+        toggleVisibility(elements.numNodes, showAdvanced && elements.checkboxes.nodes.is(':checked'));
+    }
 
-            if (!elements.checkboxes.nodes.is(':checked') && elements.numNodes.val() !== "1") {
-                elements.checkboxes.nodes.prop('checked', true);
-            }
-        }
+    const isAnyAdvancedOptionNonDefault = 
+        elements.memtask.val() !== "0" ||
+        (elements.gpuType && elements.gpuType.val() !== "none") ||
+        (elements.gpuCount && elements.gpuCount.val() !== "1") ||
+        elements.nodelist.val() !== "" ||
+        elements.constraint.val() !== "" ||
+        elements.additionalEnvironment.val() !== "" ||
+        (elements.numNodes && elements.numNodes.val() !== "1");
 
-        toggleVisibility(elements.checkboxes.nodelist, true);
-        toggleVisibility(elements.checkboxes.addEnv, true);
-        toggleVisibility(elements.checkboxes.constraint, true);
-    } else {
-        // Determine if all fields are empty or in default state
-        let allEmpty = elements.memtask.val() === "0" &&
-            elements.nodelist.val() === "" &&
-            elements.additionalEnvironment.val() === "" &&
-            elements.constraint.val() === "";
-        if (elements.gpuType) {
-            allEmpty = allEmpty && elements.gpuType.val() === "none";
-        }
-        if (elements.numNodes) {
-            allEmpty = allEmpty && elements.numNodes.val() === "1";
-        }
+    elements.advancedOptions.prop('disabled', isAnyAdvancedOptionNonDefault);
 
-        if (allEmpty) {
-            // Hide all fields and uncheck all checkboxes if all fields are empty
-            Object.values(elements.checkboxes).forEach(checkbox => {
-                if (checkbox) {
-                    toggleVisibility(checkbox, false);
-                    checkbox.prop('checked', false);
-                }
-            });
-
-            toggleVisibility(elements.memtask, false);
-            toggleVisibility(elements.gpuType, false);
-            toggleVisibility(elements.gpuCount, false);
-            toggleVisibility(elements.nodelist, false);
-            toggleVisibility(elements.additionalEnvironment, false);
-            toggleVisibility(elements.constraint, false);
-            if (elements.numNodes) {
-                toggleVisibility(elements.numNodes, false);
-            }
-        } else {
-            elements.advancedOptions.prop('checked', true);
-        }
+    if (isAnyAdvancedOptionNonDefault && !showAdvanced) {
+        elements.advancedOptions.prop('checked', true);
+        toggleAdvancedOptions();
     }
 }
 
 // TOGGLE FUNCTIONS ----------------------------------------------------------------------------------------------------
 
 /**
- * Toggles the visibility of additional environment input field in the form.
- * It shows or hides the field based on the state of its corresponding checkbox
- * and the value of the input field itself.
- */
-function toggleAddEnv() {
-    let additional_environment = $('#batch_connect_session_context_additional_environment');
-    let add_env_checkbox = $('#batch_connect_session_context_add_env_checkbox');
-
-    // Determine whether to show or hide additional environment field
-    let shouldShow = add_env_checkbox.is(':checked') || additional_environment.val() !== "";
-
-    // Toggle visibility of additional environment field
-    additional_environment.parent().toggle(shouldShow);
-
-    // Ensure checkbox is checked if field is non-empty
-    if (!add_env_checkbox.is(':checked') && additional_environment.val() !== "") {
-        add_env_checkbox.prop('checked', true);
-    }
-}
-
-/**
- * Toggles the visibility of nodelist input field in the form.
- * It shows or hides the field based on the state of its corresponding checkbox
- * and the value of the input field itself.
- */
-function toggleNodelist() {
-    let nodelist = $('#batch_connect_session_context_nodelist');
-    let nodelist_checkbox = $('#batch_connect_session_context_nodelist_checkbox');
-
-    // Determine whether to show or hide nodelist field
-    let shouldShow = nodelist_checkbox.is(':checked') || nodelist.val() !== "";
-
-    // Toggle visibility of nodelist field
-    nodelist.parent().toggle(shouldShow);
-
-    // Ensure checkbox is checked if field is non-empty
-    if (!nodelist_checkbox.is(':checked') && nodelist.val() !== "") {
-        nodelist_checkbox.prop('checked', true);
-    }
-}
-
-/**
- * Toggles the visibility of memtask input field in the form.
- * It shows or hides the field based on the state of its corresponding checkbox
- * and the value of the input field itself.
+ * Toggles the visibility of the memory task field.
  */
 function toggleMemtask() {
     let memtask = $('#batch_connect_session_context_memtask');
     let memtask_checkbox = $('#batch_connect_session_context_memtask_checkbox');
 
-    // Determine whether to show or hide memtask field
-    let shouldShow = memtask_checkbox.is(':checked') || (memtask.val() !== "0" && memtask.val() !== "");
+    let showMemtask = memtask_checkbox.is(':checked');
+    memtask.parent().toggle(showMemtask);
 
-    // Toggle visibility of memtask field
-    memtask.parent().toggle(shouldShow);
-
-    // Ensure checkbox is checked if field is non-empty and not zero
-    if (!memtask_checkbox.is(':checked') && memtask.val() !== "0" && memtask.val() !== "") {
-        memtask_checkbox.prop('checked', true);
+    if (!showMemtask) {
+        memtask.val('0');
     }
+
+    memtask_checkbox.prop('disabled', memtask.val() !== '0' && memtask.val() !== '');
 }
 
 /**
- * Toggles the visibility of GPU type and count fields in the form.
- * It shows or hides these fields based on the state of the GPU checkbox
- * and the value of the GPU type field.
+ * Toggles the visibility of the GPU fields.
  */
 function toggleGPU() {
     let gpu_type = $('#batch_connect_session_context_gpu_type');
     let gpu_count = $('#batch_connect_session_context_gpu_count');
     let gpu_checkbox = $('#batch_connect_session_context_gpu_checkbox');
 
-    // Determine whether to show or hide GPU type and count fields
-    let showGPUType = gpu_checkbox.is(':checked') || gpu_type.val() !== "none";
-    let showGPUCount = showGPUType && gpu_type.val() !== "none";
+    let showGPUFields = gpu_checkbox.is(':checked');
+    gpu_type.parent().toggle(showGPUFields);
 
-    // Toggle visibility of GPU type field
-    gpu_type.parent().toggle(showGPUType);
-
-    // Toggle visibility of GPU count field
+    let showGPUCount = showGPUFields && gpu_type.val() !== "none";
     gpu_count.parent().toggle(showGPUCount);
 
-    // If checkbox is not checked and GPU type is not 'none', check checkbox
-    if (!gpu_checkbox.is(':checked') && gpu_type.val() !== "none") {
-        gpu_checkbox.prop('checked', true);
+    if (!showGPUFields) {
+        gpu_type.val('none');
+        gpu_count.val('1');
     }
+
+    gpu_checkbox.prop('disabled', gpu_type.val() !== "none" || gpu_count.val() !== '1');
 }
 
 /**
- * Toggles the visibility of constraint input field in the form.
- * It shows or hides the field based on the state of its corresponding checkbox
- * and the value of the input field itself.
+ * Toggles the visibility of the nodelist field.
+ */
+function toggleNodelist() {
+    let nodelist = $('#batch_connect_session_context_nodelist');
+    let nodelist_checkbox = $('#batch_connect_session_context_nodelist_checkbox');
+
+    let showNodelist = nodelist_checkbox.is(':checked');
+    nodelist.parent().toggle(showNodelist);
+
+    if (!showNodelist) {
+        nodelist.val('');
+    }
+
+    nodelist_checkbox.prop('disabled', nodelist.val() !== '');
+}
+
+/**
+ * Toggles the visibility of the additional environment field.
+ */
+function toggleAddEnv() {
+    let additional_environment = $('#batch_connect_session_context_additional_environment');
+    let add_env_checkbox = $('#batch_connect_session_context_add_env_checkbox');
+
+    let showAddEnv = add_env_checkbox.is(':checked');
+    additional_environment.parent().toggle(showAddEnv);
+
+    if (!showAddEnv) {
+        additional_environment.val('');
+    }
+
+    add_env_checkbox.prop('disabled', additional_environment.val() !== '');
+}
+
+/**
+ * Toggles the visibility of the constraint field.
  */
 function toggleConstraint() {
     let constraint = $('#batch_connect_session_context_constraint');
     let constraint_checkbox = $('#batch_connect_session_context_constraint_checkbox');
 
-    // Determine whether to show or hide constraint field
-    let shouldShow = constraint_checkbox.is(':checked') || constraint.val() !== "";
+    let showConstraint = constraint_checkbox.is(':checked');
+    constraint.parent().toggle(showConstraint);
 
-    // Toggle visibility of constraint field
-    constraint.parent().toggle(shouldShow);
-
-    // Ensure checkbox is checked if field is non-empty
-    if (!constraint_checkbox.is(':checked') && constraint.val() !== "") {
-        constraint_checkbox.prop('checked', true);
+    if (!showConstraint) {
+        constraint.val('');
     }
+
+    constraint_checkbox.prop('disabled', constraint.val() !== '');
 }
 
 /**
- * Toggles the visibility of nodes input field in the form.
- * It shows or hides the field based on the state of its corresponding checkbox
- * and the value of the input field itself.
+ * Toggles the visibility of the number of nodes field.
  */
 function toggleNodes() {
     let num_nodes = $('#batch_connect_session_context_num_nodes');
     let nodes_checkbox = $('#batch_connect_session_context_nodes_checkbox');
 
-    // Determine whether to show or hide nodes field
-    let shouldShow = nodes_checkbox.is(':checked') || num_nodes.val() !== "1";
+    let showNodes = nodes_checkbox.is(':checked');
+    num_nodes.parent().toggle(showNodes);
 
-    // Toggle visibility of nodes field
-    num_nodes.parent().toggle(shouldShow);
-
-    // Ensure checkbox is checked if field value is not "1"
-    if (!nodes_checkbox.is(':checked') && num_nodes.val() !== "1") {
-        nodes_checkbox.prop('checked', true);
+    if (!showNodes) {
+        num_nodes.val('1');
     }
+
+    nodes_checkbox.prop('disabled', num_nodes.val() !== '1');
 }
 
 // DOCUMENT ------------------------------------------------------------------------------------------------------------
@@ -416,44 +335,133 @@ $(document).ready(function () {
         nodelistCheckbox: $('#batch_connect_session_context_nodelist_checkbox'),
         addEnvCheckbox: $('#batch_connect_session_context_add_env_checkbox'),
         constraintCheckbox: $('#batch_connect_session_context_constraint_checkbox'),
-        nodesCheckbox: $('#batch_connect_session_context_nodes_checkbox')
+        nodesCheckbox: $('#batch_connect_session_context_nodes_checkbox'),
+        gpuType: $('#batch_connect_session_context_gpu_type'),
+        gpuCount: $('#batch_connect_session_context_gpu_count'),
+        memtask: $('#batch_connect_session_context_memtask'),
+        nodelist: $('#batch_connect_session_context_nodelist'),
+        addEnv: $('#batch_connect_session_context_additional_environment'),
+        constraint: $('#batch_connect_session_context_constraint'),
+        numNodes: $('#batch_connect_session_context_num_nodes'),
+        numCores: $('#batch_connect_session_context_num_cores'),
+        numHours: $('#batch_connect_session_context_bc_num_hours')
     };
 
-    // Run initial filters and setup
-    filterAccountPartitionOptions();
-    filterGPUOptions();
-    partitionLimits(selectors.queue.val());
+    // Function to reset advanced options to default values
+    function resetAdvancedOptions() {
+        selectors.memtaskCheckbox.prop('checked', false);
+        selectors.gpuCheckbox.prop('checked', false);
+        selectors.nodelistCheckbox.prop('checked', false);
+        selectors.addEnvCheckbox.prop('checked', false);
+        selectors.constraintCheckbox.prop('checked', false);
+        selectors.nodesCheckbox.prop('checked', false);
+        selectors.advancedOptionsCheckbox.prop('checked', false);
+
+        selectors.memtask.val('0');
+        selectors.gpuType.val('none');
+        selectors.gpuCount.val('1');
+        selectors.nodelist.val('');
+        selectors.addEnv.val('');
+        selectors.constraint.val('');
+        selectors.numNodes.val('1');
+
+        // Trigger change event on advanced options checkbox to update visibility
+        selectors.advancedOptionsCheckbox.trigger('change');
+    }
+
+    // Function to handle form display based on selected cluster
+    function handleClusterSelection() {
+        const selectedCluster = selectors.cluster.val();
+        const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+
+        // Show/hide form elements based on cluster selection
+        Object.entries(selectors).forEach(([key, selector]) => {
+            if (key === 'numCores' || key === 'numHours' || key === 'cluster') {
+                selector.parent().show();
+            } else if (key === 'queue') {
+                selector.parent().toggle(!isSpecialCluster);
+            } else {
+                selector.parent().toggle(!isSpecialCluster);
+            }
+        });
+
+        // Reset advanced options and update form
+        resetAdvancedOptions();
+        if (!isSpecialCluster) {
+            filterAccountPartitionOptions();
+            setDefaultPartition(); // Set default partition for non-special clusters
+            filterGPUOptions();
+            partitionLimits(selectors.queue.val());
+            toggleAdvancedOptions();
+        }
+    }
+
+    // Run initial setup
+    handleClusterSelection();
 
     // Add change event listeners
+    selectors.cluster.on('change', handleClusterSelection);
+
     selectors.queue.on('change', function () {
-        partitionLimits($(this).val());
-        filterGPUOptions();
-        toggleGPU();
-        setDefaultGPU();
+        const selectedCluster = selectors.cluster.val();
+        const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+
+        if (!isSpecialCluster) {
+            resetAdvancedOptions();
+            partitionLimits($(this).val());
+            filterGPUOptions();
+            toggleGPU();
+            setDefaultGPU();
+            toggleAdvancedOptions();
+        }
     });
 
-    selectors.cluster.on('change', function () {
-        filterAccountPartitionOptions();
-        setDefaultPartition();
-        filterGPUOptions();
-        setDefaultGPU();
-    });
-
-    // Toggle functions for elements
-    const toggleFunctions = {
-        memtaskCheckbox: toggleMemtask,
-        gpuCheckbox: toggleGPU,
-        advancedOptionsCheckbox: toggleAdvancedOptions,
-        nodelistCheckbox: toggleNodelist,
-        addEnvCheckbox: toggleAddEnv,
-        constraintCheckbox: toggleConstraint,
-        nodesCheckbox: toggleNodes
+    // Toggle functions and their associated inputs
+    const toggleFunctionsAndInputs = {
+        memtaskCheckbox: { toggle: toggleMemtask, input: selectors.memtask },
+        gpuCheckbox: { toggle: toggleGPU, input: selectors.gpuType },
+        nodelistCheckbox: { toggle: toggleNodelist, input: selectors.nodelist },
+        addEnvCheckbox: { toggle: toggleAddEnv, input: selectors.addEnv },
+        constraintCheckbox: { toggle: toggleConstraint, input: selectors.constraint },
+        nodesCheckbox: { toggle: toggleNodes, input: selectors.numNodes }
     };
 
-    Object.entries(toggleFunctions).forEach(([key, func]) => {
-        selectors[key].change(func);
+    // Attach change event handlers for toggle functions and inputs
+    Object.entries(toggleFunctionsAndInputs).forEach(([checkboxKey, { toggle, input }]) => {
+        selectors[checkboxKey].change(function() {
+            const selectedCluster = selectors.cluster.val();
+            const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+            if (!isSpecialCluster) {
+                toggle();
+                toggleAdvancedOptions();
+            }
+        });
+        input.on('input', function() {
+            const selectedCluster = selectors.cluster.val();
+            const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+            if (!isSpecialCluster) {
+                toggle();
+                toggleAdvancedOptions();
+            }
+        });
     });
 
-    // Set initial state
-    Object.values(toggleFunctions).forEach(fn => fn());
+    // Special handling for GPU count
+    selectors.gpuCount.on('input', function() {
+        const selectedCluster = selectors.cluster.val();
+        const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+        if (!isSpecialCluster) {
+            toggleGPU();
+            toggleAdvancedOptions();
+        }
+    });
+
+    // Special handling for advanced options
+    selectors.advancedOptionsCheckbox.change(function() {
+        const selectedCluster = selectors.cluster.val();
+        const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
+        if (!isSpecialCluster) {
+            toggleAdvancedOptions();
+        }
+    });
 });

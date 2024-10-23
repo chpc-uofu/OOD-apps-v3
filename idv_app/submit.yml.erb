@@ -8,8 +8,9 @@ batch_connect:
   template: vnc
 script:
   <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
-  accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
-  queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
+  accounting_id: "<%= custom_accpart.split(":")[0]%>"
+  queue_name: "<%= custom_accpart.split(":")[1] %>"
+  qos: "<%= custom_accpart.split(":")[2] %>"
   email: <%= emailaddr %>
   native:
     - "-n"
