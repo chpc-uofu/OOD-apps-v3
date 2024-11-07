@@ -319,6 +319,22 @@ function toggleNodes() {
     nodes_checkbox.prop('disabled', num_nodes.val() !== '1');
 }
 
+/**
+ * Toggles the visibility of the custom environment field based on Python version.
+ */
+function toggleCustomEnvironment() {
+    const pythonField = $('#batch_connect_session_context_python');
+    const customEnvironment = $('#batch_connect_session_context_custom_environment');
+    const customEnvironmentParent = customEnvironment.closest('.form-group');
+
+    const showCustomEnv = pythonField.val() === 'custom';
+    customEnvironmentParent.toggle(showCustomEnv);
+
+    if (!showCustomEnv) {
+        customEnvironment.val('');
+    }
+}
+
 // DOCUMENT ------------------------------------------------------------------------------------------------------------
 
 /**
@@ -344,7 +360,9 @@ $(document).ready(function () {
         constraint: $('#batch_connect_session_context_constraint'),
         numNodes: $('#batch_connect_session_context_num_nodes'),
         numCores: $('#batch_connect_session_context_num_cores'),
-        numHours: $('#batch_connect_session_context_bc_num_hours')
+        numHours: $('#batch_connect_session_context_bc_num_hours'),
+        python: $('#batch_connect_session_context_python'),
+        customEnvironment: $('#batch_connect_session_context_custom_environment')
     };
 
     // Function to reset advanced options to default values
@@ -364,6 +382,7 @@ $(document).ready(function () {
         selectors.addEnv.val('');
         selectors.constraint.val('');
         selectors.numNodes.val('1');
+        selectors.customEnvironment.val('');
 
         // Trigger change event on advanced options checkbox to update visibility
         selectors.advancedOptionsCheckbox.trigger('change');
@@ -376,11 +395,17 @@ $(document).ready(function () {
 
         // Show/hide form elements based on cluster selection
         Object.entries(selectors).forEach(([key, selector]) => {
-            if (key === 'numCores' || key === 'numHours' || key === 'cluster') {
+            // Always show these elements regardless of cluster
+            if (key === 'numCores' || key === 'numHours' || key === 'cluster' || 
+                key === 'python' || key === 'customEnvironment') {
                 selector.parent().show();
-            } else if (key === 'queue') {
+            } 
+            // Hide queue selector for special clusters
+            else if (key === 'queue') {
                 selector.parent().toggle(!isSpecialCluster);
-            } else {
+            } 
+            // Hide other advanced options for special clusters
+            else {
                 selector.parent().toggle(!isSpecialCluster);
             }
         });
@@ -389,11 +414,12 @@ $(document).ready(function () {
         resetAdvancedOptions();
         if (!isSpecialCluster) {
             filterAccountPartitionOptions();
-            setDefaultPartition(); // Set default partition for non-special clusters
+            setDefaultPartition();
             filterGPUOptions();
             partitionLimits(selectors.queue.val());
             toggleAdvancedOptions();
         }
+        toggleCustomEnvironment(); // Always run this regardless of cluster type
     }
 
     // Run initial setup
@@ -412,8 +438,13 @@ $(document).ready(function () {
             filterGPUOptions();
             toggleGPU();
             setDefaultGPU();
+            toggleCustomEnvironment();
             toggleAdvancedOptions();
         }
+    });
+
+    selectors.python.on('change', function() {
+        toggleCustomEnvironment();
     });
 
     // Toggle functions and their associated inputs
