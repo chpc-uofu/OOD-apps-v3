@@ -46,7 +46,8 @@ sed 's/^ \{2\}//' > "${RSESSION_WRAPPER_FILE}" << EOL
   #!/usr/bin/env bash
 
   # source Lmod if it's not already sourced - starts in clean environment
-  source /etc/profile.d/chpc.sh
+  #source /etc/profile.d/chpc.sh
+  source /uufs/chpc.utah.edu/sys/etc/chpc.sh
 # bring SLURM environment into the R session
   source ${PWD}/slurmenv.sh
 
@@ -128,7 +129,7 @@ find ~/.rstudio/sessions/active/*/session-persistent-state -type f | xargs sed -
 #
 # Start RStudio Server
 #
-
+env
 # Launch the RStudio Server
 echo "Starting up rserver..."
 set -x

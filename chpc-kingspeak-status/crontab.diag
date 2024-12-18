@@ -1,10 +1,11 @@
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:2(IDX:0-1)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:2(IDX:0-1)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:2(IDX:0-1)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:2(IDX:0-1)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:1(IDX:0)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:1(IDX:0)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:1(IDX:0)
-GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:1(IDX:0)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
 len M N w h
 268 18 15 1140 1260
+/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/chpc-kingspeak-status/bin/get-kp-node-status.sh: line 54: kp.html: Permission denied
