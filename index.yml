@@ -1,0 +1,43 @@
+---
+
+# Entries:
+# 1. Added to this file will be installed by CHPC's Ansible role.
+# 2. Are arrays for future-proofing.
+
+apiVersion: v1
+entries:
+  abaqus_app: []
+  ansysedt_app: []
+  ansys_workbench_app: []
+  app-templates: []
+  chpc-ash-status: []
+  chpc-kingspeak-status: []
+  chpc-lonepeak-status: []
+  chpc-notchpeak-status: []
+  chpc-systemstatus: []
+  codeserver_app: []
+  comsol_app: []
+  coot_app: []
+  csd_app: []
+  desktop_basic: []
+  desktop_expert: []
+  idl_app: []
+  idv_app: []
+  jupyter_app: []
+  libreoffice_app: []
+  lumerical_app: []
+  mathematica_app: []
+  matlab_app: []
+  matlab_html_app: []
+  meshroom_app: []
+  paraview_app: []
+  qgis_app: []
+  relion_app: []
+  rstudio_server_app: []
+  sas_app: []
+  shiny_app: []
+  spark_jupyter_app: []
+  starccm_app: []
+  stata_app: []
+  vmd_app: []
+  vscode_desktop_app: []
