@@ -9,7 +9,7 @@ entries:
   abaqus_app: []
   ansysedt_app: []
   ansys_workbench_app: []
-  # app-templates: []
+  app-templates: []
   chpc-ash-status: []
   chpc-kingspeak-status: []
   chpc-lonepeak-status: []
