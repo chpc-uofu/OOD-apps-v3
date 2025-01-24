@@ -1,0 +1,7 @@
+
+# Ruby
+.bundle/
+vendor/
+
+# Other
+*~
