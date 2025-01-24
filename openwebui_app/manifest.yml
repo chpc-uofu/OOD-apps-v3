@@ -1,0 +1,20 @@
+---
+name: Jupyter 
+category: Interactive Apps
+subcategory: Servers
+role: batch_connect
+description: |
+  This app will launch a [Jupyter] Notebook or Lab server using [Python] on a [HPC
+  cluster] or on a [Frisco node].
+ 
+  To start the job promptly, use notchpeak-shared-short account and partition on the [Notchpeak cluster].
+
+  [GPU specification] is optional for the clusters and partitions that have them.
+
+  [Jupyter]: https://jupyter.org/
+  [Python]: https://www.python.org/
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+  [Notchpeak cluster]: https://www.chpc.utah.edu/documentation/policies/2.1GeneralHPCClusterPolicies.php#Pol2.1.6
+

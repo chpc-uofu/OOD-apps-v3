@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -x
+
+# Set working directory to home directory
+#cd "${HOME}"
+
+module load apptainer
+
+echo `head -c 12 /dev/random | base64` > ${PWD}/.webui_secret_key
+
+# additional environment
+<%- if context.additional_environment != "" -%>
+  <%= context.additional_environment.gsub /\r\n?/, "\n" %>
+<%- end -%>
+
+# debugging info
+module list
+
+# Workaround for directory permission error
+#unset XDG_RUNTIME_DIR
+#export XDG_RUNTIME_DIR=""
+
+#
+# Start Jupyter Notebook Server
+#
+
+if [ -v "$SLURM_JOBID" ]; then
+  echo srun
+  srun hostname -s
+fi 
+
+if [ ! -d $HOME/open-webui ]; then
+  mkdir $HOME/open-webui
+fi
+if [ ! -d $HOME/open-webui/static ]; then
+  cp -r /uufs/chpc.utah.edu/common/home/u0101881/llm/openwebui/static $HOME/open-webui
+fi
+
+# if GPU, add --nv
+
+export WEBUI_URL="https://ondemand-test.chpc.utah.edu/rnode/`hostname -f`/8080/"
+
+#apptainer exec --nv -b $home/open-webui:/app/backend/data -b $home/open-webui/static:/app/backend/static -b .webui_secret_key:/app/backend/.webui_secret_key /uufs/chpc.utah.edu/common/home/u0101881/llm/openwebui/open-webui_main_0.1.x.sif /app/backend/start.sh
+apptainer exec --nv -B $HOME/open-webui:/app/backend/data -B $HOME/open-webui/static:/app/backend/static -B .webui_secret_key:/app/backend/.webui_secret_key /uufs/chpc.utah.edu/common/home/u0101881/llm/openwebui/openwebui-main /app/backend/start.sh
+

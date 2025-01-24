@@ -1,0 +1,57 @@
+<%-
+  queues = OodAppkit.clusters[:notchpeak].custom_config[:queues]
+-%>
+---
+cluster: "notchpeak"
+attributes:
+  # Set the corresponding modules that need to be loaded for Jupyter to run
+  #
+  # @note It is called within the batch job as `module load <modules>` if
+  #   defined
+  # @example Do not load any modules
+  #     modules: ""
+  # @example Using default python module
+  #     modules: "python"
+  # @example Using specific python module
+  #     modules: "python/3.5"
+  # @example Using combination of modules
+  #     modules: "python/3.5 cuda/8.0.44"
+  modules: "python/3.5.2 R/3.4.2"
+
+  bc_num_slots:
+    widget: "number_field"
+    label: "Number of tasks"
+    value: 1
+    help: "Number of cores on node type."
+    min: 1
+    max: 8
+    step: 1
+  custom_queue:
+    label: "Partition"
+    help: "Please select a queue from the drop-down."
+    widget: select
+    options:
+    <%- queues.each do |q| -%>
+      - [ "<%= q %>", "<%= q %>" ]
+    <%- end -%>
+  bc_account:
+    label: "Account"
+    help: "If left blank default account will be used. For notchpeak-guest partition, use account owner-guest"
+  node_type:
+    widget: select
+    label: "Node type"
+    help: |
+      - **any** - Chooses anyone of the available Notchpeak nodes.
+        This reduces the wait time as you have no requirements.
+      - **32 core node** - Chooses 32 core Notchpeak nodes.
+    options:
+      - ["any node", "any"]
+      - ["32 core node", "c32"]
+form:
+  - modules
+  - bc_num_slots
+  - bc_num_hours
+  - bc_account
+  - custom_queue
+  - node_type
+  - bc_email_on_started

@@ -1,0 +1,37 @@
+<%-
+  emailcmd = '/uufs/chpc.utah.edu/sys/bin/CHPCEmailLookup.sh ' + ENV["USER"]
+  emailaddr = %x[ #{emailcmd}]
+-%>
+
+batch_connect:
+  template: "basic"
+script:
+  accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
+  queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
+  email: <%= emailaddr %>
+  <%- if /frisco/.match(cluster) == nil and /crystalpeak/.match(cluster) == nil -%>
+  native:
+    - "-N"
+    - "1"
+    - "-n"
+    - "<%= num_cores %>"
+    <%- if gpu_type != "none" -%>
+       <%- if gpu_type == "any" -%>
+    - "--gres=gpu:<%= gpu_count %>"
+       <%- else -%>
+    - "--gres=gpu:<%= gpu_type %>:<%= gpu_count %>"
+       <%- end -%>
+    <%- end -%>
+    <%- if memtask != "" and memtask != "0" -%>
+    - "--mem"
+    - "<%= memtask %>G"
+    <%- end -%>
+    <%- if nodelist != "" -%>
+    - "-w"
+    - "<%= nodelist %>"
+    <%- end -%>
+    <%- if constraint != "" -%>
+    - "-C"
+    - "<%= constraint %>"
+    <%- end -%>
+  <%- end -%>
