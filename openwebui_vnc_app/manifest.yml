@@ -1,0 +1,15 @@
+---
+name: OpenWebUI VNC
+category: Interactive Apps
+subcategory: IDEs
+role: batch_connect
+description: |
+  This app will launch a [MATLAB] GUI on a [HPC cluster] or on a [Frisco node]. You will be able
+  to interact with the MATLAB GUI through a VNC session.
+
+  [GPU specification] is optional for the partitions that have them.
+
+  [MATLAB]: https://www.mathworks.com/products/matlab.html
+  [HPC cluster]: https://www.chpc.utah.edu/resources/HPC_Clusters.php
+  [Frisco node]: https://www.chpc.utah.edu/documentation/guides/frisco-nodes.php
+  [GPU specification]: https://www.chpc.utah.edu/documentation/guides/gpus-accelerators.php#overview
