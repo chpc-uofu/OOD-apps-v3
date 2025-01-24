@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# cron does not have path to sinfo
+PATH="/uufs/notchpeak.peaks/sys/installdir/slurm/std/bin:$PATH"
+
 # File to store the output
 OUTPUT_FILE="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/gpus.txt"
 
@@ -10,7 +13,7 @@ CLUSTER_FILE="/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/cluster.t
 > $OUTPUT_FILE
 
 # Special case for notchpeak-shared-short
-SPECIAL_PARTITION=( "notchpeak-shared-short" "efd-np" "tbicc-np" "civil-np" "efd-shared-np" "tbicc-shared-np" "civil-shared-np" "notchpeak-eval" )
+SPECIAL_PARTITION=( "notchpeak-shared-short" "efd-np" "tbicc-np" "civil-np" "efd-shared-np" "tbicc-shared-np" "civil-shared-np" "notchpeak-eval" "granite-gpu" )
 
 # Function to process a partition
 process_partition() {

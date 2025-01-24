@@ -63,60 +63,101 @@
         ]
       - [
            'any','any',
+           data-option-for-cluster-ash: false,
         ]
       - [
            'Nvidia GTX 1080 Ti, SP, 11GB, general, owner','1080ti',
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia GTX Titan X, SP, 12GB, owner','titanx',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-notchpeak: false,
+           data-option-for-cluster-lonepeak: false
         ]
       - [
            'Nvidia P100, DP, 16GB,  owner','p100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-notchpeak: false,
+           data-option-for-cluster-lonepeak: false
         ]
       - [
            'Nvidia V100, DP, 16GB, general, owner','v100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia P40, SP, 24GB, general','p40',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia A40, SP, 48GB, owner','a40',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia A100, DP, 40GB or 80GB, general, owner','a100',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia T4, SP, 16GB, general, owner','t4',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia L40, SP, 48GB, owner','l40',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia V, SP, 12GB, owner','titanv',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia RTX 2080 Ti, SP, 11GB, general, owner','2080ti',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia RTX 3090, SP, 24GB, general, owner','3090',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia RTX A5500, SP, 24GB, owner','a5500',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia RTX A6000, SP, 48GB, owner','a6000',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'Nvidia RTX 6000, SP, 48GB, owner','rtx6000',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
       - [
            'AMD MI100, SP, evaluation','mi100',
-        ]
-      - [
-           'Nvidia H100, DP, 94GB, general','h100nvl',
-        ]
-      - [
-           'Nvidia L40S, SP, 48GB, general','l40s',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-lonepeak: false,
+           data-option-for-cluster-kingspeak: false
         ]
     help: |
       - Default **none** if no GPU.

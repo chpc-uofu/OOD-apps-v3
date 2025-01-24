@@ -128,19 +128,16 @@ function filterAccountPartitionOptions() {
 }
 
 /**
- * Sets the default partition on form load or cluster change.
+ * Sets the default partition on cluster change.
  */
-function setDefaultPartition(clusterChange) {
+function setDefaultPartition() {
     const accountPartitionSelect = document.getElementById('batch_connect_session_context_custom_accpart');
     const options = accountPartitionSelect.options;
-    
-    // Allow for caching
-    if (clusterChange || !accountPartitionSelect.value) {
-        for (i = 0; i < options.length; i++) {
-            if (options[i].style.display !== 'none') {
-                accountPartitionSelect.selectedIndex = i;
-                return;
-            }
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].style.display !== 'none') {
+            accountPartitionSelect.selectedIndex = i;
+            return;
         }
     }
 }
@@ -322,22 +319,6 @@ function toggleNodes() {
     nodes_checkbox.prop('disabled', num_nodes.val() !== '1');
 }
 
-/**
- * Toggles the visibility of the custom environment field based on Python version.
- */
-function toggleCustomEnvironment() {
-    const pythonField = $('#batch_connect_session_context_python');
-    const customEnvironment = $('#batch_connect_session_context_custom_environment');
-    const customEnvironmentParent = customEnvironment.closest('.form-group');
-
-    const showCustomEnv = pythonField.val() === 'custom';
-    customEnvironmentParent.toggle(showCustomEnv);
-
-    if (!showCustomEnv) {
-        customEnvironment.val('');
-    }
-}
-
 // DOCUMENT ------------------------------------------------------------------------------------------------------------
 
 /**
@@ -363,9 +344,7 @@ $(document).ready(function () {
         constraint: $('#batch_connect_session_context_constraint'),
         numNodes: $('#batch_connect_session_context_num_nodes'),
         numCores: $('#batch_connect_session_context_num_cores'),
-        numHours: $('#batch_connect_session_context_bc_num_hours'),
-        python: $('#batch_connect_session_context_python'),
-        customEnvironment: $('#batch_connect_session_context_custom_environment')
+        numHours: $('#batch_connect_session_context_bc_num_hours')
     };
 
     // Function to reset advanced options to default values
@@ -385,30 +364,23 @@ $(document).ready(function () {
         selectors.addEnv.val('');
         selectors.constraint.val('');
         selectors.numNodes.val('1');
-        selectors.customEnvironment.val('');
 
         // Trigger change event on advanced options checkbox to update visibility
         selectors.advancedOptionsCheckbox.trigger('change');
     }
 
     // Function to handle form display based on selected cluster
-    function handleClusterSelection(initialSetup) {
+    function handleClusterSelection() {
         const selectedCluster = selectors.cluster.val();
         const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
 
         // Show/hide form elements based on cluster selection
         Object.entries(selectors).forEach(([key, selector]) => {
-            // Always show these elements regardless of cluster
-            if (key === 'numCores' || key === 'numHours' || key === 'cluster' || 
-                key === 'python' || key === 'customEnvironment') {
+            if (key === 'numCores' || key === 'numHours' || key === 'cluster') {
                 selector.parent().show();
-            } 
-            // Hide queue selector for special clusters
-            else if (key === 'queue') {
+            } else if (key === 'queue') {
                 selector.parent().toggle(!isSpecialCluster);
-            } 
-            // Hide other advanced options for special clusters
-            else {
+            } else {
                 selector.parent().toggle(!isSpecialCluster);
             }
         });
@@ -417,19 +389,18 @@ $(document).ready(function () {
         resetAdvancedOptions();
         if (!isSpecialCluster) {
             filterAccountPartitionOptions();
-            setDefaultPartition(!initialSetup); // Set default partition for non-special clusters
+            setDefaultPartition(); // Set default partition for non-special clusters
             filterGPUOptions();
             partitionLimits(selectors.queue.val());
             toggleAdvancedOptions();
         }
-        toggleCustomEnvironment(); // Always run this regardless of cluster type
     }
 
     // Run initial setup
-    handleClusterSelection(true);
+    handleClusterSelection();
 
     // Add change event listeners
-    selectors.cluster.on('change', () => handleClusterSelection(false));
+    selectors.cluster.on('change', handleClusterSelection);
 
     selectors.queue.on('change', function () {
         const selectedCluster = selectors.cluster.val();
@@ -441,13 +412,8 @@ $(document).ready(function () {
             filterGPUOptions();
             toggleGPU();
             setDefaultGPU();
-            toggleCustomEnvironment();
             toggleAdvancedOptions();
         }
-    });
-
-    selectors.python.on('change', function() {
-        toggleCustomEnvironment();
     });
 
     // Toggle functions and their associated inputs

@@ -63,6 +63,7 @@
         ]
       - [
            'any','any',
+           data-hide-gpu-count: false
         ]
       - [
            'Nvidia GTX 1080 Ti, SP, 11GB, general, owner','1080ti',
@@ -111,12 +112,6 @@
         ]
       - [
            'AMD MI100, SP, evaluation','mi100',
-        ]
-      - [
-           'Nvidia H100, DP, 94GB, general','h100nvl',
-        ]
-      - [
-           'Nvidia L40S, SP, 48GB, general','l40s',
         ]
     help: |
       - Default **none** if no GPU.
