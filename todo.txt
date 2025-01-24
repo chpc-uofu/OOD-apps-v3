@@ -1,0 +1,2 @@
+- make form.js as a symlink from app-template
+  - one for GPU capable apps, another for non-GPU apps
