@@ -1,0 +1,8 @@
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx5000:0(IDX:N/A),gpu:rtx2000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx5000:0(IDX:N/A),gpu:rtx2000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx6000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx6000:0(IDX:N/A)
+len M N w h
+13 2 10 760 182.0
+Read : 0 / 0 MB ==>  5%                                                                                /uufs/chpc.utah.edu/sys/ondemand/node-usage-snapshots/snapshot-gr/node-status-2025-01-24T14:48:01.csv :  5.39%   ( 12096 =>    652 bytes, /uufs/chpc.utah.edu/sys/ondemand/node-usage-snapshots/snapshot-gr/node-status-2025-01-24T14:48:01.csv.zst) 
+Read : 0 / 0 MB ==> 175%                                                                                /uufs/chpc.utah.edu/sys/ondemand/node-usage-snapshots/snapshot-gr/job-stats-2025-01-24T14:48:01.csv :208.33%   (    12 =>     25 bytes, /uufs/chpc.utah.edu/sys/ondemand/node-usage-snapshots/snapshot-gr/job-stats-2025-01-24T14:48:01.csv.zst) 

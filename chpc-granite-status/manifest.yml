@@ -1,0 +1,6 @@
+---
+name: Granite Node Status
+description: |-
+  Detailed Node Status of the Granite Cluster
+category: Clusters
+icon: fa://tachometer
