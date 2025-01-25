@@ -247,6 +247,8 @@ df['MEMORY']     = df['MEMORY']/1024
 df['ALLOC_CPUS'] = df.apply(lambda x: int(x['CPUS(A/I/O/T)'].split('/')[0]), axis=1).fillna(0)
 df['ACTIVEMEM' ] = df['MEMORY'] - df['FREE_MEM']
 
+df = df[df['NODELIST'].str.match(r'notch\d+')] # KE filter out unwanted nodes
+
 df.loc[df['GRES']=='(null)','GRES_USED'] = ''
 df.loc[df['GRES']!='(null)','GRES'] = df.loc[df['GRES']!='(null)','GRES'].str.replace(r'(S:0-1)','',regex=False)
 

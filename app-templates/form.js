@@ -128,16 +128,19 @@ function filterAccountPartitionOptions() {
 }
 
 /**
- * Sets the default partition on cluster change.
+ * Sets the default partition on form load or cluster change.
  */
-function setDefaultPartition() {
+function setDefaultPartition(clusterChange) {
     const accountPartitionSelect = document.getElementById('batch_connect_session_context_custom_accpart');
     const options = accountPartitionSelect.options;
-
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].style.display !== 'none') {
-            accountPartitionSelect.selectedIndex = i;
-            return;
+    
+    // Allow for caching
+    if (clusterChange || !accountPartitionSelect.value) {
+        for (i = 0; i < options.length; i++) {
+            if (options[i].style.display !== 'none') {
+                accountPartitionSelect.selectedIndex = i;
+                return;
+            }
         }
     }
 }
@@ -389,7 +392,7 @@ $(document).ready(function () {
     }
 
     // Function to handle form display based on selected cluster
-    function handleClusterSelection() {
+    function handleClusterSelection(initialSetup) {
         const selectedCluster = selectors.cluster.val();
         const isSpecialCluster = selectedCluster.includes('frisco') || selectedCluster.includes('bristlecone');
 
@@ -414,7 +417,7 @@ $(document).ready(function () {
         resetAdvancedOptions();
         if (!isSpecialCluster) {
             filterAccountPartitionOptions();
-            setDefaultPartition();
+            setDefaultPartition(!initialSetup); // Set default partition for non-special clusters
             filterGPUOptions();
             partitionLimits(selectors.queue.val());
             toggleAdvancedOptions();
@@ -423,10 +426,10 @@ $(document).ready(function () {
     }
 
     // Run initial setup
-    handleClusterSelection();
+    handleClusterSelection(true);
 
     // Add change event listeners
-    selectors.cluster.on('change', handleClusterSelection);
+    selectors.cluster.on('change', () => handleClusterSelection(false));
 
     selectors.queue.on('change', function () {
         const selectedCluster = selectors.cluster.val();

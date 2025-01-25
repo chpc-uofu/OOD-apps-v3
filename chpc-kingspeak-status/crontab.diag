@@ -8,4 +8,3 @@ GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:
 GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:p100:0(IDX:N/A)
 len M N w h
 268 18 15 1140 1260
-/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/chpc-kingspeak-status/bin/get-kp-node-status.sh: line 54: kp.html: Permission denied
