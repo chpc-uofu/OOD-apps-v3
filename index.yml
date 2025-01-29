@@ -20,7 +20,6 @@ entries:
   comsol_app: []
   coot_app: []
   csd_app: []
-  # desktop_basic: []
   desktop_expert: []
   idl_app: []
   idv_app: []
