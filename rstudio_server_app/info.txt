@@ -1,0 +1,9 @@
+Note Mar 22, RSS has renamed the csrf-token to rs-csrf-token
+
+https://github.com/rstudio/rstudio/commit/dd5e3747f00d1bd52c45172c6ab216191970e935#diff-4ccf78274823dedc2f25f01708aafcba7c896b6a1113f38bbe0fdc7b5e0dde20
+
+Node crash with RStudio and Singularity in CentOS7
+if R OOMs inside of singularity and SLURM cgroups, the system may not be able to kill the process and hang
+https://github.com/apptainer/singularity/issues/5850
+https://github.com/pja237/kp_oom
+NMSU has modified their OOD RStudio Server app based on these points, should be fixed in RHEL8

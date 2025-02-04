@@ -1,0 +1,6 @@
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx5000:1(IDX:0),gpu:rtx2000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx5000:1(IDX:0),gpu:rtx2000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx6000:0(IDX:N/A)
+GPU string parsing exception:  invalid literal for int() with base 10: '0)' gpu:rtx6000:0(IDX:N/A)
+len M N w h
+13 2 10 760 182.0

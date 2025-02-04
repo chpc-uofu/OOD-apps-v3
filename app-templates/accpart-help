@@ -1,0 +1,4 @@
+    label: "Account, partition, qos"
+    help: "Choose the **account:partition** combination appropriate to the cluster chosen above. If in doubt, use the default notchpeak cluster and notchpeak-shared-short account, partition and qos."
+    value: "notchpeak-shared-short:notchpeak-shared-short:notchpeak-shared-short"
+    cacheable: true
