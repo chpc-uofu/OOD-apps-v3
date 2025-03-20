@@ -29,7 +29,7 @@ cd "${HOME}"
 #
 
 # Load the required environment
-module load <%= context.version %>
+module load <%= context.auto_modules_idv %>
 
 idv_opt=""
 <%- if context.sitepath != nil -%>

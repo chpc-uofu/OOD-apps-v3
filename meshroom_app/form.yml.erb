@@ -1,20 +1,13 @@
 <%
 app_name = "Meshroom"
-mod_name = "meshroom"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 %>
 ---
 title: <%= app_name %>
 attributes:
-  version:
-    widget: select
-    label: <%= app_name %> version
+  auto_modules_meshroom:
+    default: false
     help: "This defines the version of <%= app_name %> you want to load."
-    options:
-      - [ "2021.1.0", "meshroom/2021.1.0" ]
   cluster:
     widget: "select"
     options:
@@ -25,5 +18,5 @@ attributes:
       Select the Frisco node to create this session on.<br>
 
 form:
-  - version
+  - auto_modules_meshroom
   - cluster

@@ -1,10 +1,6 @@
 <%
 app_name = "VMD"
-mod_name = "vmd"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 gpu_data = {
   gpu_partitions: CustomGPUPartitions.gpu_partitions,
   gpu_name_mappings: CustomGPUMappings.gpu_name_mappings
@@ -17,10 +13,10 @@ attributes:
     default: false
     help: "This defines the version of <%= app_name %> you want to load."
   gpudata:
-      widget: hidden_field
-      cacheable: false
-      value: |
-        "<%= gpu_data.to_json %>"
+    widget: hidden_field
+    cacheable: false
+    value: |
+      "<%= gpu_data.to_json %>"
   cluster:
     widget: select
     options:

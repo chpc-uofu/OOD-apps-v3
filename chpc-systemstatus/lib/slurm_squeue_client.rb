@@ -50,8 +50,10 @@ class SlurmSqueueClient
   def squeue_jobs_running
     return @squeue_jobs_running if defined?(@squeue_jobs_running)
 
+    #o, e, s = Open3.capture3({}, squeue_cmd, '-h', '--all', '--states=RUNNING', ' |grep -v -P "[\x80-\xFF]"')
     o, e, s = Open3.capture3({}, squeue_cmd, '-h', '--all', '--states=RUNNING')
-    
+    #File.write("/uufs/chpc.utah.edu/common/home/u0101881/ondemand/squeue.txt", o, mode: "a")
+    #o.encode "UTF-8"
     s.success? ? @squeue_jobs_running = o : raise(CommandFailed, e)
   end
 

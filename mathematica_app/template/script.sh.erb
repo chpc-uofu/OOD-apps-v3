@@ -43,4 +43,8 @@ module load <%= context.auto_modules_mathematica %>
 # Launch program
 module list
 set -x
+<%- if context.auto_modules_mathematica == "mathematica/14.2.0" -%>
+WolframNB -nosplash
+<%- else -%>
 mathematica -nosplash
+<%- end -%>

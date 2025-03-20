@@ -1,24 +1,13 @@
 <%
 app_name = "IDV"
-mod_name = "idv"
 template_root = "/var/www/ood/apps/templates/"
-#modulecmd = template_root + 'getmodules.sh' + " " + mod_name
-#modules = %x[ #{modulecmd}]
-modules = File.read(template_root+mod_name+".txt")
 %>
 ---
 title: <%= app_name %>
 attributes:
-  version:
-    widget: select
-    label: <%= app_name %> version
+  auto_modules_idv:
+    default: false
     help: "This defines the version of <%= app_name %> you want to load."
-    options:
-      <% modules.lines.reverse.each do |line| %>
-      <% unless line.to_s.strip == "" %>
-      - [ "<%= line.split('/')[1] %>", "<%= line %>" ]
-      <% end %>
-      <% end %>
   sitepath:
     widget: text_area
     label: Sitepath
@@ -34,7 +23,7 @@ attributes:
       Select the cluster or Frisco node to create this session on.<br>If you select frisco please ignore all the entries below.
 
 form:
-  - version
+  - auto_modules_idv
   - sitepath
   - cluster
   - bc_vnc_resolution  
