@@ -42,11 +42,12 @@ function partitionLimits(selected_queue) {
         "smithp-ash": { max_time: 168, max_cpu: 24, max_mem: 490 },
         "lp": { max_time: 336, max_cpu: 20, max_mem: 128 },
         "kp": { max_time: 336, max_cpu: 28, max_mem: 1000 },
-        "np": { max_time: 336, max_cpu: 64, max_mem: 1000 }
+        "np": { max_time: 336, max_cpu: 64, max_mem: 1000 },
+        "grn": { max_time: 336, max_cpu: 96, max_mem: 1152 }
     };
 
     let config = Object.entries(queueConfigs).find(([key, _]) => selected_queue.includes(key));
-    let { max_time, max_cpu, max_mem } = config ? config[1] : { max_time: 72, max_cpu: 64, max_mem: 764 };
+    let { max_time, max_cpu, max_mem } = config ? config[1] : { max_time: 72, max_cpu: 96, max_mem: 1536 };
 
     setFormField(time, max_time);
     setFormField(cpus, max_cpu);
@@ -118,6 +119,8 @@ function filterAccountPartitionOptions() {
         'kingspeak': 'kp',
         'lonepeak': 'lp',
         'notchpeak': 'np'
+        'granite': 'grn'
+        'redwood': 'rw'
     };
 
     for (let i = 0; i < options.length; i++) {
